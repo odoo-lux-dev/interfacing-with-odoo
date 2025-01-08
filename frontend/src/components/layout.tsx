@@ -11,7 +11,7 @@ interface LayoutProps {
 }
 
 const Layout: FC<LayoutProps> = ({ children }) => {
-	useWebSocket("ws://localhost:3000/ws", {
+	useWebSocket(import.meta.env.VITE_WEBSOCKET_URL, {
 		onMessage: (message) => {
 			toast.info("Mise à jour Odoo", {
 				description: message.data,
