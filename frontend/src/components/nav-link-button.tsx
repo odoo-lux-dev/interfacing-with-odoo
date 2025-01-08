@@ -12,7 +12,7 @@ const NavLinkButton: FC<NavLinkButtonProps> = ({ endpoint, label }) => {
 		<NavLink to={endpoint}>
 			{({ isActive }) => {
 				return (
-					<Button variant={isActive ? "outline" : "ghost"}>{label}</Button>
+					<Button variant={isActive ? "default" : "outline"}>{label}</Button>
 				);
 			}}
 		</NavLink>
