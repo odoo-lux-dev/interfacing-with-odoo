@@ -11,13 +11,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { odooConfigurationAtom } from "@/store/credentials-store.ts";
+import { odooConfigurationAtom } from "@/store/credentials-store";
 
-interface OdooConfigurationProps {
+interface IOdooConfigurationProps {
 	children: ReactNode;
 }
 
-const OdooConfiguration: FC<OdooConfigurationProps> = ({ children }) => {
+const OdooConfiguration: FC<IOdooConfigurationProps> = ({ children }) => {
 	const [odooConfig, setOdooConfig] = useAtom(odooConfigurationAtom);
 
 	return (
@@ -38,7 +38,7 @@ const OdooConfiguration: FC<OdooConfigurationProps> = ({ children }) => {
 						</Label>
 						<Input
 							id="url"
-							placeholder="http://localhost:8069"
+							placeholder="http://localhost"
 							className="col-span-3"
 							value={odooConfig.url}
 							onChange={(e) =>

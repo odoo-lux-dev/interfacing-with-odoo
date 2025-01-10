@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button";
 import type { FC } from "react";
 import { NavLink, useLocation } from "react-router";
-import OdooConfiguration from "@/components/odoo-configuration.tsx";
-import NavLinkButton from "@/components/nav-link-button.tsx";
+import OdooConfiguration from "@/components/odoo-configuration";
+import NavLinkButton from "@/components/nav-link-button";
 
 const CONFIGURATION_ALLOWED_LINKS = ["/json", "/webhook", "/json-rpc"];
 

@@ -1,13 +1,13 @@
 import type { FC } from "react";
 import { NavLink } from "react-router";
-import { Button } from "@/components/ui/button.tsx";
+import { Button } from "@/components/ui/button";
 
-interface NavLinkButtonProps {
+interface INavLinkButtonProps {
 	endpoint: string;
 	label: string;
 }
 
-const NavLinkButton: FC<NavLinkButtonProps> = ({ endpoint, label }) => {
+const NavLinkButton: FC<INavLinkButtonProps> = ({ endpoint, label }) => {
 	return (
 		<NavLink to={endpoint}>
 			{({ isActive }) => {

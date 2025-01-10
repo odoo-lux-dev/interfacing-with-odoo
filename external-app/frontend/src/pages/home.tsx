@@ -1,8 +1,6 @@
-import Layout from "@/components/layout.tsx";
-
 export default function Home() {
 	return (
-		<Layout>
+		<>
 			<h1 className="text-2xl font-bold mb-4">S'interfacer avec Odoo</h1>
 			<p>
 				Ce site a pour but de montrer différentes façons de s'interfacer avec
@@ -31,6 +29,6 @@ export default function Home() {
 				d'un "croissantage". Ça permet de garder votre application à jour en
 				temps réel.
 			</p>
-		</Layout>
+		</>
 	);
 }
