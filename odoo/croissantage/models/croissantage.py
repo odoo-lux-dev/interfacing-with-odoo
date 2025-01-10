@@ -13,9 +13,9 @@ class Croissantage(models.Model):
 
     state = fields.Selection(
         [
-            ('new', 'croissanté'),
-            ('ongoign','croissants ramenés'),
-            ('done', 'dette payée')
+            ('new', 'Croissanté'),
+            ('ongoing','Croissants ramenés'),
+            ('done', 'Dette payée')
         ]
     )
 
