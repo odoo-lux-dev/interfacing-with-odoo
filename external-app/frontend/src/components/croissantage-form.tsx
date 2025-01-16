@@ -19,7 +19,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx";
 import { useState } from "react";
 import { useDebounce } from "react-use";
 
-interface ICroissantageFormProps {
+interface CroissantageFormProps {
 	debouncedInputValue: string;
 	selectedPartner: number | null;
 	setSelectedPartner: (partner: number | null) => void;
@@ -31,7 +31,7 @@ interface ICroissantageFormProps {
 	isFetchingPartners: boolean;
 }
 
-const CroissantageForm: FC<ICroissantageFormProps> = ({
+const CroissantageForm: FC<CroissantageFormProps> = ({
 	debouncedInputValue,
 	selectedPartner,
 	setSelectedPartner,

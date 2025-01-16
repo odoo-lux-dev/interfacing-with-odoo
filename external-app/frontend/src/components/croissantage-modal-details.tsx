@@ -11,12 +11,12 @@ import { odooFetch } from "@/lib/odoo.ts";
 import { Separator } from "@/components/ui/separator.tsx";
 import DataCollapsible from "@/components/data-viewer-collapsible.tsx";
 
-interface ICroissantageModalDetailsProps {
+interface CroissantageModalDetailsProps {
 	children: ReactNode;
 	id: number;
 }
 
-const CroissantageModalDetails: FC<ICroissantageModalDetailsProps> = ({
+const CroissantageModalDetails: FC<CroissantageModalDetailsProps> = ({
 	children,
 	id,
 }) => {

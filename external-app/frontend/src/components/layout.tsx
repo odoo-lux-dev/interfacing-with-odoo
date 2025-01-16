@@ -5,12 +5,12 @@ import { Provider } from "jotai";
 import { store } from "@/store";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-interface ILayoutProps {
+interface LayoutProps {
 	children: ReactNode;
 }
 
 const queryClient = new QueryClient();
-const Layout: FC<ILayoutProps> = ({ children }) => {
+const Layout: FC<LayoutProps> = ({ children }) => {
 	return (
 		<Provider store={store}>
 			<QueryClientProvider client={queryClient}>

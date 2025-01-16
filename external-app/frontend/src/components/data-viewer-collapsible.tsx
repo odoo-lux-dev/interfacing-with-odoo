@@ -8,12 +8,12 @@ import { Button } from "@/components/ui/button.tsx";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 
-interface IDataCollapsibleProps {
+interface DataCollapsibleProps {
 	title: string;
 	children: ReactNode;
 }
 
-const DataCollapsible: FC<IDataCollapsibleProps> = ({ children, title }) => {
+const DataCollapsible: FC<DataCollapsibleProps> = ({ children, title }) => {
 	const [isOpen, setIsOpen] = useState(false);
 
 	return (

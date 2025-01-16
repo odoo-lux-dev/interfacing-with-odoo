@@ -1,14 +1,40 @@
 import useWebSocket from "react-use-websocket";
 import { toast } from "sonner";
+import { useState } from "react";
+import { store } from "@/store";
+import { odooConfigurationAtom } from "@/store/credentials-store.ts";
+import WebhookList from "@/components/webhook-list.tsx";
+import { Separator } from "@/components/ui/separator.tsx";
+import { LoaderCircle } from "lucide-react";
+import { WebhookReceivedMessage, WebhookSentMessage } from "@/types.ts";
 
 export default function Webhook() {
+	const [receivedWebhooks, setReceivedWebhooks] = useState<
+		WebhookReceivedMessage[]
+	>([]);
+	const [sentWebhooks, setSentWebhooks] = useState<WebhookSentMessage[]>([]);
+	const odooConfiguration = store.get(odooConfigurationAtom);
+
 	useWebSocket(import.meta.env.VITE_WEBSOCKET_URL, {
 		onMessage: (message) => {
-			toast.info("Mise à jour Odoo", {
-				description: message.data,
+			const parsedMessage = JSON.parse(message.data) as WebhookReceivedMessage;
+			setReceivedWebhooks((prev) => [
+				...prev,
+				{
+					...parsedMessage,
+					type: "received",
+				},
+			]);
+			toast.info("Nouveau croissantage", {
+				description: `Le croissantage #${parsedMessage.id} "${parsedMessage.name}" a été créé !`,
 				action: {
-					label: "Recharger",
-					onClick: () => window.location.reload(),
+					label: "Voir",
+					onClick: () => {
+						window.open(
+							`${odooConfiguration.url}:${odooConfiguration.port}/odoo/croissantage/${parsedMessage.id}`,
+							"_blank",
+						);
+					},
 				},
 			});
 		},
@@ -16,7 +42,36 @@ export default function Webhook() {
 
 	return (
 		<>
-			<h1 className="text-2xl font-bold mb-4">Être notifié via Webhook</h1>
+			<h1 className="text-2xl font-bold mb-4">S'interfacer via Webhook</h1>
+			{!receivedWebhooks.length && !sentWebhooks.length ? (
+				<div className="flex justify-center items-center gap-3">
+					<h2 className="flex gap-2 text-md">
+						En attente de réception de webhooks sur l'endpoint{" "}
+						<pre>http://localhost:3000/webhook</pre>
+					</h2>
+					<LoaderCircle className="animate-spin" />
+				</div>
+			) : null}
+
+			{receivedWebhooks.length ? (
+				<>
+					<h2 className="text-xl font-bold mb-2">Webhooks reçus</h2>
+					<WebhookList
+						webhooks={receivedWebhooks}
+						setSentWebhooks={(data: WebhookSentMessage) =>
+							setSentWebhooks((prev) => [...prev, data])
+						}
+					/>
+				</>
+			) : null}
+
+			{sentWebhooks.length ? (
+				<>
+					<Separator className="my-5" />
+					<h2 className="text-xl font-bold mb-2">Webhooks envoyés</h2>
+					<WebhookList webhooks={sentWebhooks} />
+				</>
+			) : null}
 		</>
 	);
 }

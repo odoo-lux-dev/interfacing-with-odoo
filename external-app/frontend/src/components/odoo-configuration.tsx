@@ -13,11 +13,11 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { odooConfigurationAtom } from "@/store/credentials-store";
 
-interface IOdooConfigurationProps {
+interface OdooConfigurationProps {
 	children: ReactNode;
 }
 
-const OdooConfiguration: FC<IOdooConfigurationProps> = ({ children }) => {
+const OdooConfiguration: FC<OdooConfigurationProps> = ({ children }) => {
 	const [odooConfig, setOdooConfig] = useAtom(odooConfigurationAtom);
 
 	return (

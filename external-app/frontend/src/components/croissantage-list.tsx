@@ -10,24 +10,9 @@ import {
 import { Button } from "@/components/ui/button.tsx";
 import { Search } from "lucide-react";
 import CroissantageModalDetails from "@/components/croissantage-modal-details.tsx";
+import { CroissantageListProps } from "@/types.ts";
 
-interface IPartner {
-	id: number;
-	display_name: string;
-}
-
-interface ICroissantage {
-	id: number;
-	name: string;
-	partner_id: IPartner;
-	partner_ids: number[];
-}
-
-interface ICroissantageListProps {
-	croissantages: ICroissantage[];
-}
-
-const CroissantageList: FC<ICroissantageListProps> = ({ croissantages }) => {
+const CroissantageList: FC<CroissantageListProps> = ({ croissantages }) => {
 	return (
 		<div className="w-full overflow-auto">
 			<Table>
