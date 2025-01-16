@@ -10,6 +10,8 @@ import { useQuery } from "@tanstack/react-query";
 import { odooFetch } from "@/lib/odoo.ts";
 import { Separator } from "@/components/ui/separator.tsx";
 import DataCollapsible from "@/components/data-viewer-collapsible.tsx";
+import { store } from "@/store";
+import { odooConfigurationAtom } from "@/store/credentials-store.ts";
 
 interface CroissantageModalDetailsProps {
 	children: ReactNode;
@@ -20,9 +22,11 @@ const CroissantageModalDetails: FC<CroissantageModalDetailsProps> = ({
 	children,
 	id,
 }) => {
+	const odooConfiguration = store.get(odooConfigurationAtom);
+
 	const { data } = useQuery({
 		queryKey: [`croissantage-details-${id}`],
-		queryFn: () => odooFetch("/json/1/croissantage/1"),
+		queryFn: () => odooFetch(`/json/1/croissantage/${id}`),
 	});
 
 	return (
@@ -64,6 +68,12 @@ const CroissantageModalDetails: FC<CroissantageModalDetailsProps> = ({
 				</div>
 				<Separator className="my-5" />
 				<DataCollapsible title="Retour de l'API">
+					<p className="py-3">
+						<strong className="text-sm">Requête : </strong>
+						<code className="bg-gray-100">
+							{`${odooConfiguration.url}:${odooConfiguration.port}/json/1/croissantage/${id}`}
+						</code>
+					</p>
 					<pre className="bg-gray-100 p-4 rounded-md overflow-x-auto">
 						<code>{JSON.stringify(data, null, 2)}</code>
 					</pre>

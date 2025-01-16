@@ -5,8 +5,12 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button.tsx";
 import { RefreshCcw } from "lucide-react";
 import DataCollapsible from "@/components/data-viewer-collapsible.tsx";
+import { store } from "@/store";
+import { odooConfigurationAtom } from "@/store/credentials-store.ts";
 
 export default function JSONPage() {
+	const odooConfiguration = store.get(odooConfigurationAtom);
+
 	const { data, refetch } = useQuery({
 		queryKey: ["croissantage"],
 		queryFn: () => odooFetch("/json/1/croissantage"),
@@ -26,6 +30,12 @@ export default function JSONPage() {
 				<CroissantageList croissantages={data?.records} />
 				<Separator className="my-5" />
 				<DataCollapsible title="Retour de l'API">
+					<p className="py-3">
+						<strong className="text-sm">Requête : </strong>
+						<code className="bg-gray-100">
+							{`${odooConfiguration.url}:${odooConfiguration.port}/json/1/croissantage`}
+						</code>
+					</p>
 					<pre className="bg-gray-100 p-4 rounded-md overflow-x-auto">
 						<code>{JSON.stringify(data, null, 2)}</code>
 					</pre>
