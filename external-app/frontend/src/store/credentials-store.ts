@@ -1,6 +1,6 @@
 import { atomWithStorage } from "jotai/utils";
 
-interface IOdooConfiguration {
+interface OdooConfiguration {
 	url: string;
 	port: number;
 	name: string;
@@ -8,7 +8,7 @@ interface IOdooConfiguration {
 	apiKey: string;
 }
 
-export const odooConfigurationAtom = atomWithStorage<IOdooConfiguration>(
+export const odooConfigurationAtom = atomWithStorage<OdooConfiguration>(
 	"odoo-configuration",
 	{
 		url: "",
