@@ -17,6 +17,8 @@ export default function JSONRpc() {
 		queryKey: ["croissantageStatuses"],
 		queryFn: async () => {
 			const odooRpcClient = await getOdooJSONRpcClient();
+			// call_kw is a wrapper of Odoo's execute_kw
+			// It prevents to pass redundant parameters for each call : db, uid, password
 			return odooRpcClient.call_kw("croissantage", "fields_get", ["state"], {
 				attributes: ["selection"],
 			});
@@ -28,6 +30,8 @@ export default function JSONRpc() {
 		queryFn: async () => {
 			const odooRpcClient = await getOdooJSONRpcClient();
 			if (debouncedInputValue === "" || !odooRpcClient) return [];
+			// call_kw is a wrapper of Odoo's execute_kw
+			// It prevents to pass redundant parameters for each call : db, uid, password
 			return await odooRpcClient.call_kw("res.partner", "search_read", [
 				[
 					["name", "ilike", `%${debouncedInputValue}%`],
@@ -46,6 +50,8 @@ export default function JSONRpc() {
 			state: string;
 		}) => {
 			const odooRpcClient = await getOdooJSONRpcClient();
+			// call_kw is a wrapper of Odoo's execute_kw
+			// It prevents to pass redundant parameters for each call : db, uid, password
 			return odooRpcClient.call_kw("croissantage", "create", [
 				croissantageValues,
 			]);
