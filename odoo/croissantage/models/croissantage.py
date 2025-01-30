@@ -16,7 +16,8 @@ class Croissantage(models.Model):
             ('new', 'Croissanté'),
             ('ongoing','Croissants ramenés'),
             ('done', 'Dette payée')
-        ]
+        ],
+        default='new'
     )
 
     date_begin = fields.Date('Date de croissantage', default=fields.Date.today())
@@ -43,3 +44,23 @@ class Croissantage(models.Model):
         for rec in self:
             if rec.date_end and rec.date_end < rec.date_begin:
                 raise UserError(_('Date de fin doit être plus grande que la date de début'))
+
+    def action_send_croissantage_mail(self):
+        self.ensure_one()
+        template_id = self.env.ref('croissantage.mail_template_send_croissantage')
+        ctx = {
+            'default_email_layout_xmlid': 'mail.mail_notification_light',
+            'default_model': 'croissantage',
+            'default_res_ids': self.ids,
+            'default_template_id': template_id.id,
+            'default_composition_mode': 'comment',
+            'default_from': self.env.user.partner_id.id,
+        }
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'mail.compose.message',
+            'views': [[False, 'form']],
+            'target': 'new',
+            'context': ctx,
+        }

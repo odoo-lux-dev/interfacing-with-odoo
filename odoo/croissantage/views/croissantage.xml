@@ -11,6 +11,8 @@
                     <button string="Validation" name="act_validate" type="object"
                             invisible="state == 'done'"
                             class="oe_highlight"/>
+                    <button id="send_croissantage_mail" type="object"
+                            string="Notifier le croissanté" name="action_send_croissantage_mail"/>
                 </header>
                 <sheet>
                     <group>
