@@ -1,16 +1,43 @@
-# Lux Tech Evening - S'interfacer avec Odoo
+# S'interfacer avec Odoo - Application Externe - Backend
 
-> [!NOTE]
-> Ce projet est une version minimaliste d'une application et celle-ci n'est pas destinée à être utilisée en production.
+> [!WARNING]
+> Ceci est une version minimaliste d'une application et n'est pas destiné à être utilisé en production tel quel.
 
 ## Présentation
 Ce repository contient le code source du backend de l'application permettant de montrer différentes possibilités d'interfacer avec Odoo.
 
-Ce repo contient:
-- Une route webhook pour recevoir des données d'Odoo
-- Une route websocket pour montrer la notification en temps réelle sur le frontend
+Il dispose de 2 routes:
+- Une route **webhook** pour recevoir des données d'Odoo
+- Une route **websocket** pour montrer la notification en temps réel sur le frontend
 
 ## Technique
 - [Elysia](https://elysiajs.com/)
 - [Bun](https://bun.sh) comme gestionnaire de paquets et runtime
 - [Biome](https://biomejs.dev/) en tant que formatter & linter pour remplacer ESLint
+
+---
+
+## Démarrer le projet en local
+
+### Prérequis
+- [Bun](https://bun.sh)
+
+### Étapes
+
+1. Clonez le repository:
+   ```bash
+   git clone git@github.com:odoo-lux-dev/lux-tech-evening-odoo-interfacing.git
+   cd external-app/backend
+   ```
+2. Installez les dépendances:
+   ```bash
+    bun install
+    ```
+3. Démarrez le serveur:
+   ```bash
+    bun run dev
+    ```
+4. L'application est accessible à l'adresse suivante:
+   ```bash
+   http://localhost:3000
+   ```

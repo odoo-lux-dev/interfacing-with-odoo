@@ -1,10 +1,11 @@
-# Lux Tech Evening - S'interfacer avec Odoo
+# S'interfacer avec Odoo
 
-> [!NOTE]
-> Ce projet est une version minimaliste d'une application et celle-ci n'est pas destinée à être utilisée en production.
+> [!WARNING]
+> Ceci est une version minimaliste d'une application et n'est pas destiné à être utilisé en production tel quel.
 
 Le repo est séparé en deux dossiers:
-- `external-app` contient le code source de l'application externe
-- `odoo` contient le code source des customisations Odoo
+- `external-app` contenant le code source de l'application externe
+- `odoo` contenant le code source des customisations Odoo
 
-Vous pouvez trouver plus d'explications dans les README de chaque dossier.
+> [!TIP]
+> Vous pouvez trouver plus d'explications dans les README de chaque partie.
