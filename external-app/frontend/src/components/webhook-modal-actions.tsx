@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button.tsx";
 import WebhookModalSimpleAction from "@/components/webhook-modal-simple-action.tsx";
 import WebhookModalComplexAction from "@/components/webhook-modal-complex-action.tsx";
 import { WebhookReceivedMessage, WebhookSentMessage } from "@/types.ts";
+import { Hammer } from "lucide-react";
 
 interface WebhookModalActionsProps {
 	webhook: WebhookReceivedMessage;
@@ -30,7 +31,9 @@ const WebhookModalActions: FC<WebhookModalActionsProps> = ({
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
-				<Button variant="outline">Actions</Button>
+				<Button variant="outline">
+					<Hammer /> Actions
+				</Button>
 			</DialogTrigger>
 			<DialogContent>
 				<DialogHeader>

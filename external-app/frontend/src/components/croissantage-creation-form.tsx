@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label.tsx";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group.tsx";
 import PartnerSelect from "@/components/partner-select.tsx";
 import {
+	croissantageRpcListAtom,
 	croissantageStatusesAtom,
 	partnersExecutionerListAtom,
 	partnersVictimListAtom,
@@ -15,7 +16,7 @@ import {
 } from "@/store/form-store.ts";
 import { useAtom } from "jotai";
 import { useMutation } from "@tanstack/react-query";
-import { getOdooJSONRpcClient } from "@/lib/odoo.ts";
+import { createRecord } from "@/lib/odoo.ts";
 import { toast } from "sonner";
 import { store } from "@/store";
 import { odooConfigurationAtom } from "@/store/credentials-store.ts";
@@ -26,6 +27,7 @@ const CroissantageCreationForm: FC = () => {
 	const [selectedStatus, setSelectedStatus] = useAtom(selectedStatusAtom);
 	const [selectedVictim] = useAtom(selectedVictimAtom);
 	const [selectedExecutioners] = useAtom(selectedExecutionerAtom);
+	const [{ refetch: refetchCroissantages }] = useAtom(croissantageRpcListAtom);
 
 	const mappedStatuses = statuses.state.selection.map(([id, name]) => ({
 		id,
@@ -33,18 +35,7 @@ const CroissantageCreationForm: FC = () => {
 	}));
 
 	const croissantageCreationMutation = useMutation({
-		mutationFn: async (croissantageValues: {
-			name: string;
-			partner_id: number;
-			state: string;
-		}) => {
-			const odooRpcClient = await getOdooJSONRpcClient();
-			// call_kw is a wrapper of Odoo's execute_kw
-			// It prevents to pass redundant parameters for each call : db, uid, password
-			return odooRpcClient.call_kw("croissantage", "create", [
-				croissantageValues,
-			]);
-		},
+		mutationFn: createRecord,
 		onSuccess: (recordId) => {
 			toast.success("Croissantage créé avec succès", {
 				description: `ID: ${recordId}`,
@@ -58,6 +49,7 @@ const CroissantageCreationForm: FC = () => {
 					},
 				},
 			});
+			refetchCroissantages().catch(console.error);
 		},
 	});
 

@@ -69,7 +69,7 @@ const WebhookModalSimpleAction: FC<WebhookModalSimpleActionProps> = ({
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button>Action simple</Button>
+				<Button>Action "simple"</Button>
 			</DialogTrigger>
 			<DialogContent>
 				<DialogHeader>

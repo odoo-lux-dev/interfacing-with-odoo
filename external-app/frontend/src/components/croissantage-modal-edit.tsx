@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { getOdooJSONRpcClient } from "@/lib/odoo.ts";
+import { editRecord } from "@/lib/odoo.ts";
 import { toast } from "sonner";
 import { croissantageRpcListAtom } from "@/store/form-store.ts";
 import { useAtom } from "jotai";
@@ -34,18 +34,7 @@ const CroissantageModalEdit: FC<CroissantageModalEditProps> = ({
 	);
 
 	const croissantageEditMutation = useMutation({
-		mutationFn: async (croissantageValues: {
-			id: number;
-			options: any;
-		}) => {
-			const odooRpcClient = await getOdooJSONRpcClient();
-			// call_kw is a wrapper of Odoo's execute_kw
-			// It prevents to pass redundant parameters for each call : db, uid, password
-			return odooRpcClient.call_kw("croissantage", "write", [
-				[croissantageValues.id],
-				croissantageValues.options,
-			]);
-		},
+		mutationFn: editRecord,
 		onSuccess: () => {
 			toast.success("Croissantage mis à jour avec succès");
 			refetchCroissantageList().catch(console.error);

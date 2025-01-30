@@ -16,9 +16,9 @@ import { TableCell, TableRow } from "@/components/ui/table.tsx";
 import CroissantageList from "@/components/croissantage-list.tsx";
 import CroissantageModalEdit from "@/components/croissantage-modal-edit.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import { NotebookPen, Pencil, Send } from "lucide-react";
+import { NotebookPen, Pencil, Send, Trash2 } from "lucide-react";
 import CroissantageModalLogNote from "@/components/croissantage-modal-log-note.tsx";
-import { getOdooJSONRpcClient } from "@/lib/odoo.ts";
+import { deleteRecord, sendMailNotification } from "@/lib/odoo.ts";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -29,38 +29,31 @@ export default function JSONRpc() {
 	const [selectedStatus] = useAtom(selectedStatusAtom);
 	const [selectedVictim] = useAtom(selectedVictimAtom);
 	const [selectedExecutioners] = useAtom(selectedExecutionerAtom);
-	const [{ data: croissantages }] = useAtom(croissantageRpcListAtom);
+	const [{ data: croissantages, refetch: refetchCroissantages }] = useAtom(
+		croissantageRpcListAtom,
+	);
 
 	const croissantageMailNotificationMutation = useMutation({
-		mutationFn: async (croissantageId: number) => {
-			const odooRpcClient = await getOdooJSONRpcClient();
-			// call_kw is a wrapper of Odoo's execute_kw
-			// It prevents to pass redundant parameters for each call : db, uid, password
-			const actionSendMail = await odooRpcClient.call_kw(
-				"croissantage",
-				"action_send_croissantage_mail",
-				[croissantageId],
-			);
-			const actionContext = actionSendMail.context;
-			const wizardArgs = [{}];
-			const wizardKwargs = { context: actionContext };
-			const wizardId = await odooRpcClient.call_kw(
-				"mail.compose.message",
-				"create",
-				wizardArgs,
-				wizardKwargs,
-			);
-			await odooRpcClient.call_kw("mail.compose.message", "action_send_mail", [
-				wizardId,
-			]);
-		},
+		mutationFn: sendMailNotification,
 		onSuccess: () => {
 			toast.success("Email envoyé avec succès");
 		},
 	});
 
+	const deleteCroissantageMutation = useMutation({
+		mutationFn: deleteRecord,
+		onSuccess: () => {
+			toast.success("Croissantage supprimé avec succès");
+			refetchCroissantages().catch(console.error);
+		},
+	});
+
 	const sendNotificationMail = async (croissantageId: number) => {
 		croissantageMailNotificationMutation.mutate(croissantageId);
+	};
+
+	const deleteCroissantage = async (croissantageId: number) => {
+		deleteCroissantageMutation.mutate(croissantageId);
 	};
 
 	return (
@@ -97,6 +90,12 @@ export default function JSONRpc() {
 									<NotebookPen /> Log Note
 								</Button>
 							</CroissantageModalLogNote>
+							<Button
+								variant="outline"
+								onClick={() => deleteCroissantage(croissantage.id)}
+							>
+								<Trash2 /> Supprimer
+							</Button>
 						</TableCell>
 					</TableRow>
 				))}
@@ -110,7 +109,8 @@ export default function JSONRpc() {
 					<p className="py-3">
 						<strong className="text-sm">Requête : </strong>
 						<code className="bg-gray-100">
-							call_kw("res.partner", "search_read", [[["name", "ilike", "
+							odooJSONRpcClient.call_kw("res.partner", "search_read", [[["name",
+							"ilike", "
 							{searchInputValueVictim !== ""
 								? `%${searchInputValueVictim}%`
 								: ""}
@@ -127,7 +127,7 @@ export default function JSONRpc() {
 					<p className="py-3">
 						<strong className="text-sm">Requête : </strong>
 						<code className="bg-gray-100">
-							{`call_kw("croissantage", "fields_get", ["state"], { "attributes": ["selection"]})`}
+							{`odooJSONRpcClient.call_kw("croissantage", "fields_get", ["state"], { "attributes": ["selection"]})`}
 						</code>
 					</p>
 					<pre className="bg-gray-100 p-4 rounded-md overflow-x-auto">
@@ -140,7 +140,7 @@ export default function JSONRpc() {
 					<p className="py-3">
 						<strong className="text-sm">Requête : </strong>
 						<code className="bg-gray-100">
-							{`call_kw("croissantage", "search_read", [[], ["id", "name", "partner_id", "partner_ids"]])`}
+							{`odooJSONRpcClient.call_kw("croissantage", "search_read", [[], ["id", "name", "partner_id", "partner_ids"]])`}
 						</code>
 					</p>
 					<pre className="bg-gray-100 p-4 rounded-md overflow-x-auto">
@@ -203,6 +203,15 @@ await odooRpcClient.call_kw("mail.compose.message", "action_send_mail", [
 	wizardId,
 ]);
 `}
+						</code>
+					</pre>
+					<Separator className="my-3" />
+					<h4 className="text-sm font-bold">
+						Suppression du record (croissantage)
+					</h4>
+					<pre className="bg-gray-100 p-4 rounded-md overflow-x-auto">
+						<code>
+							{`odooRpcClient.call_kw("croissantage", "unlink", [recordId])`}
 						</code>
 					</pre>
 				</>

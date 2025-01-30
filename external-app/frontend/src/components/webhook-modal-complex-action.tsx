@@ -15,6 +15,8 @@ import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { useMutation } from "@tanstack/react-query";
 import { WebhookReceivedMessage, WebhookSentMessage } from "@/types.ts";
+import { store } from "@/store";
+import { odooConfigurationAtom } from "@/store/credentials-store.ts";
 
 interface WebhookModalComplexActionProps {
 	webhook: WebhookReceivedMessage;
@@ -42,7 +44,10 @@ const WebhookModalComplexAction: FC<WebhookModalComplexActionProps> = ({
 	webhook,
 	callback,
 }) => {
-	const [webhookUrl, setWebhookUrl] = useState("");
+	const odooConfiguration = store.get(odooConfigurationAtom);
+	const [webhookUrl, setWebhookUrl] = useState(
+		`${odooConfiguration.url}:${odooConfiguration.port}/web/hook/add_log_note`,
+	);
 	const [webhookMessage, setWebhookMessage] = useState("");
 	const [open, setOpen] = useState(false);
 	const mutation = useMutation({
@@ -74,7 +79,7 @@ const WebhookModalComplexAction: FC<WebhookModalComplexActionProps> = ({
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button>Action complexe</Button>
+				<Button>Action "complexe"</Button>
 			</DialogTrigger>
 			<DialogContent>
 				<DialogHeader>

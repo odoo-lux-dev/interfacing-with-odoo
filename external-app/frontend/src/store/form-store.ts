@@ -18,14 +18,9 @@ export const croissantageStatusesAtom = atomWithQuery(() => ({
 		const odooRpcClient = await getOdooJSONRpcClient();
 		// call_kw is a wrapper of Odoo's execute_kw
 		// It prevents to pass redundant parameters for each call : db, uid, password
-		return await odooRpcClient.call_kw(
-			"croissantage",
-			"fields_get",
-			["state"],
-			{
-				attributes: ["selection"],
-			},
-		);
+		return odooRpcClient.call_kw("croissantage", "fields_get", ["state"], {
+			attributes: ["selection"],
+		});
 	},
 	placeholderData: { state: { selection: [] } },
 }));
