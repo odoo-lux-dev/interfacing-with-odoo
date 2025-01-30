@@ -3,10 +3,13 @@ import { odooFetch } from "@/lib/odoo";
 import CroissantageList from "@/components/croissantage-list";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button.tsx";
-import { RefreshCcw } from "lucide-react";
+import { RefreshCcw, Search } from "lucide-react";
 import DataCollapsible from "@/components/data-viewer-collapsible.tsx";
 import { store } from "@/store";
 import { odooConfigurationAtom } from "@/store/credentials-store.ts";
+import { TableCell, TableRow } from "@/components/ui/table.tsx";
+import CroissantageModalDetails from "@/components/croissantage-modal-details.tsx";
+import { Croissantage } from "@/types.ts";
 
 export default function JSONPage() {
 	const odooConfiguration = store.get(odooConfigurationAtom);
@@ -27,7 +30,23 @@ export default function JSONPage() {
 				</Button>
 			</div>
 			<div>
-				<CroissantageList croissantages={data?.records} />
+				<CroissantageList>
+					{data?.records?.map((croissantage: Croissantage) => (
+						<TableRow key={croissantage.id}>
+							<TableCell className="font-medium">{croissantage.id}</TableCell>
+							<TableCell>{croissantage.name}</TableCell>
+							<TableCell>{croissantage.partner_id.display_name}</TableCell>
+							<TableCell>{croissantage.partner_ids.join(", ")}</TableCell>
+							<TableCell>
+								<CroissantageModalDetails id={croissantage.id}>
+									<Button variant="outline">
+										<Search /> Détails
+									</Button>
+								</CroissantageModalDetails>
+							</TableCell>
+						</TableRow>
+					))}
+				</CroissantageList>
 				<Separator className="my-5" />
 				<DataCollapsible title="Retour de l'API">
 					<p className="py-3">

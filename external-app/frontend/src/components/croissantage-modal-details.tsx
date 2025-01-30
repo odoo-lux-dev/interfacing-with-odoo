@@ -32,7 +32,7 @@ const CroissantageModalDetails: FC<CroissantageModalDetailsProps> = ({
 	return (
 		<Dialog>
 			<DialogTrigger asChild>{children}</DialogTrigger>
-			<DialogContent>
+			<DialogContent className="min-w-[80%]">
 				<DialogHeader>
 					<DialogTitle>Détail de "{data?.name}"</DialogTitle>
 				</DialogHeader>

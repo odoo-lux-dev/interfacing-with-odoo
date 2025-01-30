@@ -20,10 +20,10 @@ import { toast } from "sonner";
 import { store } from "@/store";
 import { odooConfigurationAtom } from "@/store/credentials-store.ts";
 
-const CroissantageForm: FC = () => {
+const CroissantageCreationForm: FC = () => {
 	const odooConfiguration = store.get(odooConfigurationAtom);
-	const [selectedStatus, setSelectedStatus] = useAtom(selectedStatusAtom);
 	const [{ data: statuses }] = useAtom(croissantageStatusesAtom);
+	const [selectedStatus, setSelectedStatus] = useAtom(selectedStatusAtom);
 	const [selectedVictim] = useAtom(selectedVictimAtom);
 	const [selectedExecutioners] = useAtom(selectedExecutionerAtom);
 
@@ -114,4 +114,4 @@ const CroissantageForm: FC = () => {
 	);
 };
 
-export default CroissantageForm;
+export default CroissantageCreationForm;

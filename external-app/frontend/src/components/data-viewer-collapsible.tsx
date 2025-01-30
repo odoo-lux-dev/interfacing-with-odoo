@@ -19,7 +19,7 @@ const DataCollapsible: FC<DataCollapsibleProps> = ({ children, title }) => {
 	return (
 		<Collapsible open={isOpen} onOpenChange={setIsOpen}>
 			<CollapsibleTrigger asChild>
-				<div className="flex items-center justify-between space-x-4 cursor-pointer">
+				<div className="flex items-center justify-between space-x-4 cursor-pointer select-none">
 					<h3 className="text-lg font-bold">{title}</h3>
 					<Button variant="ghost" size="sm">
 						{isOpen ? (

@@ -10,10 +10,6 @@ export interface Croissantage {
 	partner_ids: number[];
 }
 
-export interface CroissantageListProps {
-	croissantages: Croissantage[];
-}
-
 export interface WebhookMessageBase {
 	id: number;
 	name: string;
