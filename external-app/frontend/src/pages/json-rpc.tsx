@@ -21,6 +21,7 @@ import CroissantageModalLogNote from "@/components/croissantage-modal-log-note.t
 import { deleteRecord, sendMailNotification } from "@/lib/odoo.ts";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 export default function JSONRpc() {
 	const [searchInputValueVictim] = useAtom(searchInputValueVictimAtom);
@@ -32,18 +33,21 @@ export default function JSONRpc() {
 	const [{ data: croissantages, refetch: refetchCroissantages }] = useAtom(
 		croissantageRpcListAtom,
 	);
+	const { t } = useTranslation();
 
 	const croissantageMailNotificationMutation = useMutation({
 		mutationFn: sendMailNotification,
 		onSuccess: () => {
-			toast.success("Email envoyé avec succès");
+			toast.success(t("EMAIL_SUCCESSFULLY_SENT", { ns: "croissantage" }));
 		},
 	});
 
 	const deleteCroissantageMutation = useMutation({
 		mutationFn: deleteRecord,
 		onSuccess: () => {
-			toast.success("Croissantage supprimé avec succès");
+			toast.success(
+				t("CROISSANTAGE_SUCCESSFULLY_REMOVED", { ns: "croissantage" }),
+			);
 			refetchCroissantages().catch(console.error);
 		},
 	});
@@ -58,12 +62,16 @@ export default function JSONRpc() {
 
 	return (
 		<>
-			<h1 className="text-2xl font-bold mb-4">S'interfacer via JSON-RPC</h1>
-			<h2 className="text-xl font-bold mb-2">Créer un croissantage</h2>
+			<h1 className="text-2xl font-bold mb-4">
+				{t("JSON_RPC_PAGE_TITLE", { ns: "pages" })}
+			</h1>
+			<h2 className="text-xl font-bold mb-2">
+				{t("JSON_RPC_PAGE_CREATE_CROISSANTAGE", { ns: "pages" })}
+			</h2>
 			<CroissantageCreationForm />
 			<Separator className="my-5" />
 			<h2 className="text-xl font-bold mb-2">
-				Listing et édition de croissantage
+				{t("JSON_RPC_PAGE_VIEW_EDIT_CROISSANTAGES", { ns: "pages" })}
 			</h2>
 			<Separator className="my-5" />
 			<CroissantageList>
@@ -76,14 +84,14 @@ export default function JSONRpc() {
 						<TableCell className="flex gap-2">
 							<CroissantageModalEdit croissantage={croissantage}>
 								<Button variant="outline">
-									<Pencil /> Éditer
+									<Pencil /> {t("EDIT_LABEL")}
 								</Button>
 							</CroissantageModalEdit>
 							<Button
 								variant="outline"
 								onClick={() => sendNotificationMail(croissantage.id)}
 							>
-								<Send /> Notification
+								<Send /> {t("NOTIFY_LABEL")}
 							</Button>
 							<CroissantageModalLogNote croissantage={croissantage}>
 								<Button variant="outline">
@@ -94,20 +102,23 @@ export default function JSONRpc() {
 								variant="outline"
 								onClick={() => deleteCroissantage(croissantage.id)}
 							>
-								<Trash2 /> Supprimer
+								<Trash2 /> {t("DELETE_LABEL")}
 							</Button>
 						</TableCell>
 					</TableRow>
 				))}
 			</CroissantageList>
 			<Separator className="my-5" />
-			<DataCollapsible title="Détail des calls RPC">
+			<DataCollapsible title={t("RPC_CALL_DETAILS_LABEL")}>
 				<>
 					<h4 className="text-sm font-bold">
-						Fetch du "Croissanté" (res.partner)
+						{t("MODEL_FETCHING_LABEL", {
+							displayName: "Croissanté",
+							modelName: "res.partner",
+						})}
 					</h4>
 					<p className="py-3">
-						<strong className="text-sm">Requête : </strong>
+						<strong className="text-sm">{t("REQUEST_LABEL")} : </strong>
 						<code className="bg-gray-100">
 							odooJSONRpcClient.call_kw("res.partner", "search_read", [[["name",
 							"ilike", "
@@ -122,10 +133,13 @@ export default function JSONRpc() {
 					</pre>
 					<Separator className="my-3" />
 					<h4 className="text-sm font-bold">
-						Fetch du "Statut" (croissantage)
+						{t("MODEL_FETCHING_LABEL", {
+							displayName: "State",
+							modelName: "croissantage",
+						})}
 					</h4>
 					<p className="py-3">
-						<strong className="text-sm">Requête : </strong>
+						<strong className="text-sm">{t("REQUEST_LABEL")} : </strong>
 						<code className="bg-gray-100">
 							{`odooJSONRpcClient.call_kw("croissantage", "fields_get", ["state"], { "attributes": ["selection"]})`}
 						</code>
@@ -135,10 +149,13 @@ export default function JSONRpc() {
 					</pre>
 					<Separator className="my-3" />
 					<h4 className="text-sm font-bold">
-						Fetch des croissantages (croissantage)
+						{t("MODEL_FETCHING_LABEL", {
+							displayName: "Croissantages",
+							modelName: "croissantage",
+						})}
 					</h4>
 					<p className="py-3">
-						<strong className="text-sm">Requête : </strong>
+						<strong className="text-sm">{t("REQUEST_LABEL")} : </strong>
 						<code className="bg-gray-100">
 							{`odooJSONRpcClient.call_kw("croissantage", "search_read", [[], ["id", "name", "partner_id", "partner_ids"]])`}
 						</code>
@@ -148,13 +165,18 @@ export default function JSONRpc() {
 					</pre>
 					<Separator className="my-3" />
 					<h4 className="text-sm font-bold">
-						Création du croissantage (croissantage)
+						{t("MODEL_CREATION_LABEL", {
+							modelName: "croissantage",
+							displayName: "Croissantage",
+						})}
 					</h4>
 					<pre className="bg-gray-100 p-4 rounded-md overflow-x-auto">
 						<code>
 							{`const croissantageValues = ${JSON.stringify(
 								{
-									name: "Croissantage créé par RPC",
+									name: t("CROISSANTAGE_CREATED_VIA_RPC", {
+										ns: "croissantage",
+									}),
 									partner_id: selectedVictim[0],
 									partner_ids: [[6, 0, selectedExecutioners]],
 									state: selectedStatus,
@@ -165,32 +187,32 @@ export default function JSONRpc() {
 
 odooJSONRpcClient.call_kw("croissantage", "create", [croissantageValues])
 	.then((recordId) => {
-		// L'ID du croissantage est retourné à la création
+		// Croissantage ID is returned
 	})
 `}
 						</code>
 					</pre>
 					<Separator className="my-3" />
 					<h4 className="text-sm font-bold">
-						Envoi du mail de notifications (croissantage)
+						{t("MODEL_SEND_NOTIFICATION_LABEL", { modelName: "croissantage" })}
 					</h4>
 					<pre className="bg-gray-100 p-4 rounded-md overflow-x-auto">
 						<code>
-							{`// On part du principe que l'on recupère l'ID du croissantage dans "croissantageId"
+							{`// We assume that we retrieve the croissantage ID in "croissantageId" - On part du principe que l'on recupère l'ID du croissantage dans "croissantageId"
 
-// On récupère l'action à effectuer pour envoyer le mail
+// Retrieve the action to be performed to send the e-mail - On récupère l'action à effectuer pour envoyer le mail
 const actionSendMail = await odooRpcClient.call_kw(
 	"croissantage",
 	"action_send_croissantage_mail",
 	[croissantageId],
 );
 
-// On récupère le contexte de l'action
+// We retrieve the context of the action - On récupère le contexte de l'action
 const actionContext = actionSendMail.context;
 const wizardArgs = [{}];
 const wizardKwargs = { context: actionContext };
 
-// On crée le wizard pour envoyer le mail, en utilisant le contexte de l'action
+// We create the wizard to send the e-mail, using the context of the action - On crée le wizard pour envoyer le mail, en utilisant le contexte de l'action
 const wizardId = await odooRpcClient.call_kw(
 	"mail.compose.message",
 	"create",
@@ -198,7 +220,7 @@ const wizardId = await odooRpcClient.call_kw(
 	wizardKwargs,
 );
 
-// Validation du wizard pour envoyer le mail
+// Validate the wizard to send the e-mail - Validation du wizard pour envoyer le mail
 await odooRpcClient.call_kw("mail.compose.message", "action_send_mail", [
 	wizardId,
 ]);
@@ -207,7 +229,10 @@ await odooRpcClient.call_kw("mail.compose.message", "action_send_mail", [
 					</pre>
 					<Separator className="my-3" />
 					<h4 className="text-sm font-bold">
-						Suppression du record (croissantage)
+						{t("MODEL_DELETION_LABEL", {
+							displayName: "Croissantage",
+							modelName: "croissantage",
+						})}
 					</h4>
 					<pre className="bg-gray-100 p-4 rounded-md overflow-x-auto">
 						<code>

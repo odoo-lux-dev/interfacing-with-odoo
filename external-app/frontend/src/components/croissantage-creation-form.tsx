@@ -20,6 +20,7 @@ import { createRecord } from "@/lib/odoo.ts";
 import { toast } from "sonner";
 import { store } from "@/store";
 import { odooConfigurationAtom } from "@/store/credentials-store.ts";
+import { useTranslation } from "react-i18next";
 
 const CroissantageCreationForm: FC = () => {
 	const odooConfiguration = store.get(odooConfigurationAtom);
@@ -28,6 +29,7 @@ const CroissantageCreationForm: FC = () => {
 	const [selectedVictim] = useAtom(selectedVictimAtom);
 	const [selectedExecutioners] = useAtom(selectedExecutionerAtom);
 	const [{ refetch: refetchCroissantages }] = useAtom(croissantageRpcListAtom);
+	const { t } = useTranslation();
 
 	const mappedStatuses = statuses.state.selection.map(([id, name]) => ({
 		id,
@@ -37,10 +39,10 @@ const CroissantageCreationForm: FC = () => {
 	const croissantageCreationMutation = useMutation({
 		mutationFn: createRecord,
 		onSuccess: (recordId) => {
-			toast.success("Croissantage créé avec succès", {
+			toast.success(t("CROISSANTAGE_SUCCESSFULLY_CREATED"), {
 				description: `ID: ${recordId}`,
 				action: {
-					label: "Voir",
+					label: t("GO_TO_LABEL"),
 					onClick: () => {
 						window.open(
 							`${odooConfiguration.url}:${odooConfiguration.port}/odoo/croissantage/${recordId}`,
@@ -55,7 +57,7 @@ const CroissantageCreationForm: FC = () => {
 
 	const onSubmit = () => {
 		const croissantageValues = {
-			name: "Croissantage créé par RPC",
+			name: t("CROISSANTAGE_CREATED_VIA_RPC"),
 			partner_id: selectedVictim[0],
 			partner_ids: [[6, 0, selectedExecutioners]],
 			state: selectedStatus,
@@ -87,7 +89,7 @@ const CroissantageCreationForm: FC = () => {
 				/>
 			</div>
 			<div className="flex items-center gap-3">
-				<Label>Statut</Label>
+				<Label>{t("STATE_LABEL")}</Label>
 				<RadioGroup
 					onValueChange={setSelectedStatus}
 					className="flex space-x-4"
@@ -101,7 +103,7 @@ const CroissantageCreationForm: FC = () => {
 				</RadioGroup>
 			</div>
 
-			<Button onClick={onSubmit}>Créer</Button>
+			<Button onClick={onSubmit}>{t("CREATE_LABEL")}</Button>
 		</div>
 	);
 };

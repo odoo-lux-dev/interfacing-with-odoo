@@ -17,6 +17,7 @@ import { useMutation } from "@tanstack/react-query";
 import { WebhookReceivedMessage, WebhookSentMessage } from "@/types.ts";
 import { store } from "@/store";
 import { odooConfigurationAtom } from "@/store/credentials-store.ts";
+import { useTranslation } from "react-i18next";
 
 interface WebhookModalComplexActionProps {
 	webhook: WebhookReceivedMessage;
@@ -35,7 +36,7 @@ const sendWebhook = async ({ recordId, webhookMessage, webhookUrl }) => {
 		body: JSON.stringify(webhookBody),
 	});
 	if (!response.ok) {
-		throw new Error("Erreur lors de l'envoi du webhook");
+		throw new Error("Error w/ webhook");
 	}
 	return response.json();
 };
@@ -50,6 +51,7 @@ const WebhookModalComplexAction: FC<WebhookModalComplexActionProps> = ({
 	);
 	const [webhookMessage, setWebhookMessage] = useState("");
 	const [open, setOpen] = useState(false);
+	const { t } = useTranslation();
 	const mutation = useMutation({
 		mutationFn: sendWebhook,
 		onSuccess: () => {
@@ -64,7 +66,7 @@ const WebhookModalComplexAction: FC<WebhookModalComplexActionProps> = ({
 				name: webhookUrl,
 			});
 			setOpen(false);
-			toast.success("Webhook envoyé avec succès !");
+			toast.success(t("WEBHOOK_SUCCESSFULLY_SENT", { ns: "croissantage" }));
 		},
 	});
 
@@ -79,23 +81,29 @@ const WebhookModalComplexAction: FC<WebhookModalComplexActionProps> = ({
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button>Action "complexe"</Button>
+				<Button>{t("COMPLEX_ACTION_LABEL", { ns: "croissantage" })}</Button>
 			</DialogTrigger>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Déclencher une action pour "{webhook.name}"</DialogTitle>
+					<DialogTitle>
+						{t("ACTION_TRIGGER_MODAL_TITLE", {
+							ns: "croissantage",
+							name: webhook.name,
+						})}
+					</DialogTitle>
 				</DialogHeader>
 				<DialogDescription>
-					Ceci va déclencher une action définie dans le webhook Odoo en y
-					passant également des données
+					{t("COMPLEX_ACTION_TRIGGER_MODAL_DESCRIPTION", {
+						ns: "croissantage",
+					})}
 				</DialogDescription>
 				<Input
-					placeholder="URL du Webhook"
+					placeholder="URL Webhook"
 					value={webhookUrl}
 					onChange={(e) => setWebhookUrl(e.target.value)}
 				/>
 				<Textarea
-					placeholder="Entrez le message à rajouter au chatter du record"
+					placeholder={t("POST_LOG_NOTE_PLACEHOLDER", { ns: "croissantage" })}
 					value={webhookMessage}
 					onChange={(e) => setWebhookMessage(e.target.value)}
 				/>

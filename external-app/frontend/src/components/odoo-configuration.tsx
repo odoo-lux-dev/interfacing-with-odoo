@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { odooConfigurationAtom } from "@/store/credentials-store";
+import { useTranslation } from "react-i18next";
 
 interface OdooConfigurationProps {
 	children: ReactNode;
@@ -19,19 +20,20 @@ interface OdooConfigurationProps {
 
 const OdooConfiguration: FC<OdooConfigurationProps> = ({ children }) => {
 	const [odooConfig, setOdooConfig] = useAtom(odooConfigurationAtom);
+	const { t } = useTranslation();
 
 	return (
 		<Dialog>
 			<DialogTrigger asChild>{children}</DialogTrigger>
 			<DialogContent className="sm:max-w-[425px]">
 				<DialogHeader>
-					<DialogTitle>Configuration d'Odoo</DialogTitle>
+					<DialogTitle>{t("SETUP_ODOO_INFORMATIONS")}</DialogTitle>
 					<DialogDescription>
-						Mettez à jour les informations pour intéragir avec votre DB Odoo
+						{t("SETUP_ODOO_INFORMATIONS_DESCRIPTION")}
 					</DialogDescription>
 				</DialogHeader>
 				<div className="grid gap-4 py-4">
-					<p>Informations DB</p>
+					<p>{t("DB_INFORMATIONS")}</p>
 					<div className="grid grid-cols-4 items-center gap-4">
 						<Label htmlFor="url" className="text-right">
 							URL
@@ -63,11 +65,11 @@ const OdooConfiguration: FC<OdooConfigurationProps> = ({ children }) => {
 					</div>
 					<div className="grid grid-cols-4 items-center gap-4">
 						<Label htmlFor="name" className="text-right">
-							Nom
+							{t("NAME_LABEL")}
 						</Label>
 						<Input
 							id="name"
-							placeholder="ma-database-odoo"
+							placeholder="my-database-odoo"
 							className="col-span-3"
 							value={odooConfig.name}
 							onChange={(e) =>
@@ -76,10 +78,10 @@ const OdooConfiguration: FC<OdooConfigurationProps> = ({ children }) => {
 						/>
 					</div>
 					<Separator />
-					<p>Informations de connexion</p>
+					<p>{t("LOGIN_INFORMATIONS")}</p>
 					<div className="grid grid-cols-4 items-center gap-4">
 						<Label htmlFor="username" className="text-right">
-							Utilisateur
+							{t("USER_LABEL")}
 						</Label>
 						<Input
 							id="username"
@@ -93,7 +95,7 @@ const OdooConfiguration: FC<OdooConfigurationProps> = ({ children }) => {
 					</div>
 					<div className="grid grid-cols-4 items-center gap-4">
 						<Label htmlFor="api-key" className="text-right">
-							Clé API
+							{t("API_KEY_LABEL")}
 						</Label>
 						<Input
 							id="api-key"

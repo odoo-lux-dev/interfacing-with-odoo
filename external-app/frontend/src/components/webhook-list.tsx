@@ -10,6 +10,7 @@ import {
 import WebhookModalDetails from "@/components/webhook-modal-details.tsx";
 import WebhookModalActions from "@/components/webhook-modal-actions.tsx";
 import { WebhookReceivedMessage, WebhookSentMessage } from "@/types.ts";
+import { useTranslation } from "react-i18next";
 
 interface WebhookListProps {
 	webhooks: WebhookReceivedMessage[] | WebhookSentMessage[];
@@ -19,14 +20,22 @@ interface WebhookListProps {
 const WebhookList: FC<WebhookListProps> = ({ webhooks, setSentWebhooks }) => {
 	if (!webhooks.length) return null;
 	const isReceived = webhooks.every((webhook) => webhook.type === "received");
+	const { t } = useTranslation();
 
 	return (
 		<Table>
 			<TableHeader>
 				<TableRow>
-					<TableHead className="w-[100px]">ID du record</TableHead>
-					{!isReceived ? <TableHead> Type d'action</TableHead> : null}
-					<TableHead>{isReceived ? "Nom du record" : "URL Webhook"}</TableHead>
+					<TableHead className="w-[100px]">ID Record</TableHead>
+					{!isReceived ? (
+						<TableHead>
+							{" "}
+							{t("ACTION_TYPE_LABEL", { ns: "croissantage" })}
+						</TableHead>
+					) : null}
+					<TableHead>
+						{isReceived ? t("RECORD_NAME_LABEL") : "URL Webhook"}
+					</TableHead>
 					<TableHead></TableHead>
 				</TableRow>
 			</TableHeader>

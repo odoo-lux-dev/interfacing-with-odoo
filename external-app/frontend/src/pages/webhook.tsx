@@ -7,6 +7,7 @@ import WebhookList from "@/components/webhook-list.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { LoaderCircle } from "lucide-react";
 import { WebhookReceivedMessage, WebhookSentMessage } from "@/types.ts";
+import { useTranslation } from "react-i18next";
 
 export default function Webhook() {
 	const [receivedWebhooks, setReceivedWebhooks] = useState<
@@ -14,6 +15,7 @@ export default function Webhook() {
 	>([]);
 	const [sentWebhooks, setSentWebhooks] = useState<WebhookSentMessage[]>([]);
 	const odooConfiguration = store.get(odooConfigurationAtom);
+	const { t } = useTranslation();
 
 	useWebSocket(import.meta.env.VITE_WEBSOCKET_URL, {
 		onMessage: (message) => {
@@ -25,10 +27,14 @@ export default function Webhook() {
 					type: "received",
 				},
 			]);
-			toast.info("Nouveau croissantage", {
-				description: `Le croissantage #${parsedMessage.id} "${parsedMessage.name}" a été créé !`,
+			toast.info(t("NEW_CROISSANTAGE_TOAST_TITLE", { ns: "croissantage" }), {
+				description: t("NEW_CROISSANTAGE_TOAST_DESCRIPTION", {
+					ns: "croissantage",
+					id: parsedMessage.id,
+					name: parsedMessage.name,
+				}),
 				action: {
-					label: "Voir",
+					label: t("GO_TO_LABEL"),
 					onClick: () => {
 						window.open(
 							`${odooConfiguration.url}:${odooConfiguration.port}/odoo/croissantage/${parsedMessage.id}`,
@@ -42,11 +48,13 @@ export default function Webhook() {
 
 	return (
 		<>
-			<h1 className="text-2xl font-bold mb-4">S'interfacer via Webhook</h1>
+			<h1 className="text-2xl font-bold mb-4">
+				{t("WEBHOOK_PAGE_TITLE", { ns: "pages" })}
+			</h1>
 			{!receivedWebhooks.length && !sentWebhooks.length ? (
 				<div className="flex justify-center items-center gap-3">
 					<h2 className="flex gap-2 text-md">
-						En attente de réception de webhooks sur l'endpoint{" "}
+						{t("WEBHOOK_PAGE_WAITING_FOR_WEBHOOK", { ns: "pages" })}
 						<pre>http://localhost:3000/webhook</pre>
 					</h2>
 					<LoaderCircle className="animate-spin" />

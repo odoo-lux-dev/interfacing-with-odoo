@@ -19,6 +19,7 @@ import { useDebounce } from "react-use";
 import { atom, useAtom } from "jotai";
 import { useQuery } from "@tanstack/react-query";
 import { getOdooJSONRpcClient } from "@/lib/odoo.ts";
+import { useTranslation } from "react-i18next";
 
 interface PartnerSelectProps {
 	searchInputValueAtom: ReturnType<typeof atom<string>>;
@@ -38,6 +39,7 @@ const PartnerSelect: FC<PartnerSelectProps> = ({
 	const [searchInputValue, setSearchInputValue] = useAtom(searchInputValueAtom);
 	const [, setFetchedPartners] = useAtom(partnersAtom);
 	const [selectedPartners, setSelectedPartners] = useAtom(selectedPartnersAtom);
+	const { t } = useTranslation();
 
 	const { data: partners, isFetching: isFetchingPartners } = useQuery({
 		queryKey: ["partners", searchInputValue],
@@ -68,8 +70,11 @@ const PartnerSelect: FC<PartnerSelectProps> = ({
 
 	const emptyLabel =
 		searchInputValue === "" || isFetchingPartners
-			? "Entrez votre recherche"
-			: `Aucun partenaire trouvé pour "${searchInputValue}"`;
+			? t("TYPE_YOUR_SEARCH_LABEL", { ns: "croissantage" })
+			: t("NO_RESULT_FOUND_LABEL", {
+					ns: "croissantage",
+					search: searchInputValue,
+				});
 
 	useDebounce(
 		() => {
@@ -104,11 +109,14 @@ const PartnerSelect: FC<PartnerSelectProps> = ({
 					className="w-[250px] justify-between"
 				>
 					{selectedPartners.length === 0
-						? "Sélectionnez un partenaire..."
+						? t("SELECT_PARTNER_LABEL", { ns: "croissantage" })
 						: selectedPartners.length === 1
 							? partners.find((partner) => partner.id === selectedPartners[0])
 									?.name
-							: `${selectedPartners.length} partenaires sélectionnés`}
+							: t("SELECTED_PARTNERS_LABEL", {
+									count: selectedPartners.length,
+									ns: "croissantage",
+								})}
 					<ChevronsUpDown className="opacity-50" />
 				</Button>
 			</PopoverTrigger>
@@ -117,7 +125,7 @@ const PartnerSelect: FC<PartnerSelectProps> = ({
 					<CommandInput
 						value={inputValue}
 						onValueChange={setInputValue}
-						placeholder="Rechercher un partenaire..."
+						placeholder={t("SEARCH_PARTNER_LABEL", { ns: "croissantage" })}
 					/>
 					<CommandList>
 						<CommandEmpty className="py-6 px-3 text-center text-sm">

@@ -14,6 +14,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { WebhookReceivedMessage, WebhookSentMessage } from "@/types.ts";
+import { useTranslation } from "react-i18next";
 
 interface WebhookModalSimpleActionProps {
 	webhook: WebhookReceivedMessage;
@@ -31,7 +32,7 @@ const sendWebhook = async ({ recordId, webhookUrl }) => {
 		body: JSON.stringify(webhookBody),
 	});
 	if (!response.ok) {
-		throw new Error("Erreur lors de l'envoi du webhook");
+		throw new Error("Error w/ webhook");
 	}
 	return response.json();
 };
@@ -42,6 +43,7 @@ const WebhookModalSimpleAction: FC<WebhookModalSimpleActionProps> = ({
 }) => {
 	const [webhookUrl, setWebhookUrl] = useState("");
 	const [open, setOpen] = useState(false);
+	const { t } = useTranslation();
 	const mutation = useMutation({
 		mutationFn: sendWebhook,
 		onSuccess: () => {
@@ -55,7 +57,7 @@ const WebhookModalSimpleAction: FC<WebhookModalSimpleActionProps> = ({
 				name: webhookUrl,
 			});
 			setOpen(false);
-			toast.success("Webhook envoyé avec succès !");
+			toast.success(t("WEBHOOK_SUCCESSFULLY_SENT", { ns: "croissantage" }));
 		},
 	});
 
@@ -69,22 +71,24 @@ const WebhookModalSimpleAction: FC<WebhookModalSimpleActionProps> = ({
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<Button>Action "simple"</Button>
+				<Button>{t("SIMPLE_ACTION_LABEL", { ns: "croissantage" })}</Button>
 			</DialogTrigger>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Déclencher une action pour "{webhook.name}"</DialogTitle>
+					<DialogTitle>
+						{t("ACTION_TRIGGER_MODAL_TITLE", { name: webhook.name })}
+					</DialogTitle>
 				</DialogHeader>
 				<DialogDescription>
-					Ceci va déclencher une action définie dans le webhook Odoo
+					{t("SIMPLE_ACTION_TRIGGER_MODAL_DESCRIPTION", { ns: "croissantage" })}
 				</DialogDescription>
 				<Input
-					placeholder="URL du Webhook"
+					placeholder="URL Webhook"
 					value={webhookUrl}
 					onChange={(e) => setWebhookUrl(e.target.value)}
 				/>
 				<DialogFooter>
-					<Button onClick={handleSendWebhook}>Envoyer</Button>
+					<Button onClick={handleSendWebhook}>{t("SEND_LABEL")}</Button>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>

@@ -12,6 +12,7 @@ import WebhookModalSimpleAction from "@/components/webhook-modal-simple-action.t
 import WebhookModalComplexAction from "@/components/webhook-modal-complex-action.tsx";
 import { WebhookReceivedMessage, WebhookSentMessage } from "@/types.ts";
 import { Hammer } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface WebhookModalActionsProps {
 	webhook: WebhookReceivedMessage;
@@ -28,6 +29,8 @@ const WebhookModalActions: FC<WebhookModalActionsProps> = ({
 			...data,
 		});
 	};
+	const { t } = useTranslation();
+
 	return (
 		<Dialog>
 			<DialogTrigger asChild>
@@ -37,10 +40,15 @@ const WebhookModalActions: FC<WebhookModalActionsProps> = ({
 			</DialogTrigger>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Actions pour "{webhook.name}"</DialogTitle>
+					<DialogTitle>
+						{t("ACTIONS_MODAL_TITLE", {
+							ns: "croissantage",
+							name: webhook.name,
+						})}
+					</DialogTitle>
 				</DialogHeader>
 				<DialogDescription>
-					Les actions que vous effectuez seront envoyées à Odoo via Webhook
+					{t("ACTIONS_MODAL_DESCRIPTION", { ns: "croissantage" })}
 				</DialogDescription>
 				<div className="flex gap-2">
 					<WebhookModalSimpleAction

@@ -18,6 +18,7 @@ import { editRecord } from "@/lib/odoo.ts";
 import { toast } from "sonner";
 import { croissantageRpcListAtom } from "@/store/form-store.ts";
 import { useAtom } from "jotai";
+import { useTranslation } from "react-i18next";
 
 interface CroissantageModalEditProps {
 	children: ReactNode;
@@ -32,11 +33,14 @@ const CroissantageModalEdit: FC<CroissantageModalEditProps> = ({
 	const [{ refetch: refetchCroissantageList }] = useAtom(
 		croissantageRpcListAtom,
 	);
+	const { t } = useTranslation();
 
 	const croissantageEditMutation = useMutation({
 		mutationFn: editRecord,
 		onSuccess: () => {
-			toast.success("Croissantage mis à jour avec succès");
+			toast.success(
+				t("CROISSANTAGE_SUCCESSFULLY_UPDATED", { ns: "croissantage" }),
+			);
 			refetchCroissantageList().catch(console.error);
 		},
 	});
@@ -56,18 +60,23 @@ const CroissantageModalEdit: FC<CroissantageModalEditProps> = ({
 			<DialogTrigger asChild>{children}</DialogTrigger>
 			<DialogContent className="min-w-[80%]">
 				<DialogHeader>
-					<DialogTitle>Éditer "{croissantage?.name}"</DialogTitle>
+					<DialogTitle>
+						{t("EDIT_MODAL_TITLE", {
+							ns: "croissantage",
+							name: croissantage?.name,
+						})}
+					</DialogTitle>
 				</DialogHeader>
 				<Input
-					placeholder="Nom du croissantage"
+					placeholder={t("CROISSANTAGE_NAME_LABEL", { ns: "croissantage" })}
 					value={croissantageName}
 					onChange={(e) => setCroissantageName(e.target.value)}
 				/>
 				<DialogFooter>
-					<Button onClick={handleEditCroissantage}>Sauvegarder</Button>
+					<Button onClick={handleEditCroissantage}>{t("SAVE_LABEL")}</Button>
 				</DialogFooter>
 				<Separator className="my-5" />
-				<DataCollapsible title="Détail du call RPC">
+				<DataCollapsible title={t("RPC_CALL_DETAILS_LABEL")}>
 					<pre className="bg-gray-100 p-4 rounded-md overflow-x-auto">
 						<code>
 							{`const croissantageValues = ${JSON.stringify(
@@ -79,8 +88,8 @@ const CroissantageModalEdit: FC<CroissantageModalEditProps> = ({
 							)}
 
 odooJSONRpcClient.call_kw("croissantage", "write", [
-	[${croissantage.id}], // ID du record
-	croissantageValues, // Dict. avec les données à update
+	[${croissantage.id}], // ID Record
+	croissantageValues,
 ])
 `}
 						</code>

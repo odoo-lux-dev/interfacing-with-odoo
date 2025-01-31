@@ -1,0 +1,15 @@
+{
+	"HOME_PAGE_TITLE": "S'interfacer avec Odoo",
+	"HOME_PAGE_SUBTITLE": "Ce site a pour but de montrer différentes façons de s'interfacer avec Odoo. Actuellement, trois méthodes principales sont présentées :",
+	"HOME_PAGE_SUBPART_ONE_TITLE": "Lecture de la route /json",
+	"HOME_PAGE_SUBPART_ONE_CONTENT": "Cette méthode permet de lire les données disponibles sur la route /json, disponible depuis la version 18 d'Odoo. Cette méthode permet uniquement des flux de lecture.",
+	"HOME_PAGE_SUBPART_TWO_TITLE": "Utilisation du JSON-RPC",
+	"HOME_PAGE_SUBPART_TWO_CONTENT": "Le JSON-RPC est une méthode flexible permettant diverses opérations comme la lecture, la recherche, la création, la mise à jour... mais également l'envoi de mails par exemple. C'est une interface puissante permettant d'intéragir avec la majorité des fonctionnalités d'Odoo.",
+	"HOME_PAGE_SUBPART_THREE_TITLE": "Webhook",
+	"HOME_PAGE_SUBPART_THREE_CONTENT": "Les webhooks permettent à Odoo d'envoyer des notifications à votre application quand certains événements se produisent, comme la création d'un \"croissantage\". Ça permet de garder votre application à jour en temps réel.",
+	"JSON_RPC_PAGE_TITLE": "S'interfacer via JSON-RPC",
+	"JSON_RPC_PAGE_CREATE_CROISSANTAGE": "Créer un croissantage",
+	"JSON_RPC_PAGE_VIEW_EDIT_CROISSANTAGES": "Lister et éditer des croissantages",
+	"WEBHOOK_PAGE_TITLE": "S'interfacer via Webhook",
+	"WEBHOOK_PAGE_WAITING_FOR_WEBHOOK": "En attente de réception de webhooks sur l'endpoint"
+}

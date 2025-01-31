@@ -12,6 +12,7 @@ import { Separator } from "@/components/ui/separator.tsx";
 import DataCollapsible from "@/components/data-viewer-collapsible.tsx";
 import { store } from "@/store";
 import { odooConfigurationAtom } from "@/store/credentials-store.ts";
+import { useTranslation } from "react-i18next";
 
 interface CroissantageModalDetailsProps {
 	children: ReactNode;
@@ -23,6 +24,7 @@ const CroissantageModalDetails: FC<CroissantageModalDetailsProps> = ({
 	id,
 }) => {
 	const odooConfiguration = store.get(odooConfigurationAtom);
+	const { t } = useTranslation();
 
 	const { data } = useQuery({
 		queryKey: [`croissantage-details-${id}`],
@@ -34,30 +36,32 @@ const CroissantageModalDetails: FC<CroissantageModalDetailsProps> = ({
 			<DialogTrigger asChild>{children}</DialogTrigger>
 			<DialogContent className="min-w-[80%]">
 				<DialogHeader>
-					<DialogTitle>Détail de "{data?.name}"</DialogTitle>
+					<DialogTitle>
+						{t("DETAILS_MODAL_TITLE", { ns: "croissantage", name: data?.name })}
+					</DialogTitle>
 				</DialogHeader>
 				<div>
 					<p>
 						<strong>ID:</strong> {data?.id}
 					</p>
 					<p>
-						<strong>État:</strong> {data?.state}
+						<strong>{t("STATE_LABEL")}:</strong> {data?.state}
 					</p>
 					<p>
-						<strong>Nom:</strong> {data?.name}
+						<strong>{t("NAME_LABEL")}:</strong> {data?.name}
 					</p>
 					<p>
-						<strong>Ville:</strong> {data?.city}
+						<strong>{t("CITY_LABEL")}:</strong> {data?.city}
 					</p>
 					<p>
-						<strong>Date de début:</strong> {data?.date_begin}
+						<strong>{t("BEGIN_DATE_LABEL")}:</strong> {data?.date_begin}
 					</p>
 					<p>
-						<strong>Date de fin:</strong>{" "}
+						<strong>{t("END_DATE_LABEL")}:</strong>{" "}
 						{data?.date_end ? data.date_end : "N/A"}
 					</p>
 					<p>
-						<strong>Durée:</strong> {data?.duration}
+						<strong>{t("DURATION_LABEL")}:</strong> {data?.duration}
 					</p>
 					<p>
 						<strong>Croissanté:</strong> {data?.partner_id.id}
@@ -67,9 +71,9 @@ const CroissantageModalDetails: FC<CroissantageModalDetailsProps> = ({
 					</p>
 				</div>
 				<Separator className="my-5" />
-				<DataCollapsible title="Retour de l'API">
+				<DataCollapsible title={t("API_RESPONSE_LABEL")}>
 					<p className="py-3">
-						<strong className="text-sm">Requête : </strong>
+						<strong className="text-sm">{t("REQUEST_LABEL")} : </strong>
 						<code className="bg-gray-100">
 							{`${odooConfiguration.url}:${odooConfiguration.port}/json/1/croissantage/${id}`}
 						</code>

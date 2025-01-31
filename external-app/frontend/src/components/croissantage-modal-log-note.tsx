@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import DataCollapsible from "@/components/data-viewer-collapsible.tsx";
+import { useTranslation } from "react-i18next";
 
 interface CroissantageModalLogNoteProps {
 	children: ReactNode;
@@ -28,11 +29,12 @@ const CroissantageModalLogNote: FC<CroissantageModalLogNoteProps> = ({
 	croissantage,
 }) => {
 	const [logNoteMessage, setLogNoteMessage] = useState("");
+	const { t } = useTranslation();
 
 	const croissantageLogNoteMutation = useMutation({
 		mutationFn: postLogNote,
 		onSuccess: () => {
-			toast.success("Log note postée avec succès");
+			toast.success(t("LOG_NOTE_SUCCESSFULLY_SENT", { ns: "croissantage" }));
 		},
 	});
 
@@ -53,22 +55,28 @@ const CroissantageModalLogNote: FC<CroissantageModalLogNoteProps> = ({
 			<DialogContent className="min-w-[80%]">
 				<DialogHeader>
 					<DialogTitle>
-						Poster une log note sur "{croissantage.name}"
+						{t("POST_LOG_NOTE_MODAL_TITLE", {
+							ns: "croissantage",
+							name: croissantage.name,
+						})}
 					</DialogTitle>
 				</DialogHeader>
 				<DialogDescription>
-					Ceci va poster une log note sur le croissantage "{croissantage.name}".
+					{t("POST_LOG_NOTE_MODAL_DESCRIPTION", {
+						ns: "croissantage",
+						name: croissantage.name,
+					})}
 				</DialogDescription>
 				<Textarea
-					placeholder="Entrez le message à rajouter au chatter du record"
+					placeholder={t("POST_LOG_NOTE_PLACEHOLDER", { ns: "croissantage" })}
 					value={logNoteMessage}
 					onChange={(e) => setLogNoteMessage(e.target.value)}
 				/>
 				<DialogFooter>
-					<Button onClick={handleLogNoteCroissantage}>Envoyer</Button>
+					<Button onClick={handleLogNoteCroissantage}>{t("SEND_LABEL")}</Button>
 				</DialogFooter>
 				<Separator className="my-5" />
-				<DataCollapsible title="Détail du call RPC">
+				<DataCollapsible title={t("RPC_CALL_DETAILS_LABEL")}>
 					<pre className="bg-gray-100 p-4 rounded-md overflow-x-auto">
 						<code>
 							{`const messageValues = ${JSON.stringify(
@@ -81,8 +89,8 @@ const CroissantageModalLogNote: FC<CroissantageModalLogNoteProps> = ({
 							)}
 
 odooJSONRpcClient.call_kw("croissantage", "message_post", 
-	[[${croissantage.id}]], // ID du record
-	messageValues // Dict. avec les données à utiliser
+	[[${croissantage.id}]], // ID Record
+	messageValues
 )
 `}
 						</code>

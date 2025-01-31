@@ -10,9 +10,11 @@ import { odooConfigurationAtom } from "@/store/credentials-store.ts";
 import { TableCell, TableRow } from "@/components/ui/table.tsx";
 import CroissantageModalDetails from "@/components/croissantage-modal-details.tsx";
 import { Croissantage } from "@/types.ts";
+import { useTranslation } from "react-i18next";
 
 export default function JSONPage() {
 	const odooConfiguration = store.get(odooConfigurationAtom);
+	const { t } = useTranslation();
 
 	const { data, refetch } = useQuery({
 		queryKey: ["croissantage"],
@@ -23,10 +25,10 @@ export default function JSONPage() {
 		<>
 			<div className="flex items-center justify-between space-x-4">
 				<h1 className="text-2xl font-bold mb-4">
-					Lire des données via <code>/json</code>
+					{t("READ_DATA_VIA_JSON_LABEL", { ns: "croissantage" })}
 				</h1>
 				<Button variant="outline" onClick={() => refetch()}>
-					<RefreshCcw /> Rafraîchir les données
+					<RefreshCcw /> {t("REFRESH_LABEL")}
 				</Button>
 			</div>
 			<div>
@@ -40,7 +42,7 @@ export default function JSONPage() {
 							<TableCell>
 								<CroissantageModalDetails id={croissantage.id}>
 									<Button variant="outline">
-										<Search /> Détails
+										<Search /> {t("DETAILS_LABEL")}
 									</Button>
 								</CroissantageModalDetails>
 							</TableCell>
@@ -48,9 +50,9 @@ export default function JSONPage() {
 					))}
 				</CroissantageList>
 				<Separator className="my-5" />
-				<DataCollapsible title="Retour de l'API">
+				<DataCollapsible title={t("API_RESPONSE_LABEL")}>
 					<p className="py-3">
-						<strong className="text-sm">Requête : </strong>
+						<strong className="text-sm">{t("REQUEST_LABEL")} : </strong>
 						<code className="bg-gray-100">
 							{`${odooConfiguration.url}:${odooConfiguration.port}/json/1/croissantage`}
 						</code>
