@@ -13,11 +13,13 @@ import {
 } from "@/components/ui/tooltip.tsx";
 import { useTranslation } from "react-i18next";
 import { useLocalStorage } from "react-use";
+import { useNavigate } from "react-router";
 
 const TogglePresentationMode: FC = () => {
 	const [presentationMode, setPresentationMode] = useAtom(presentationModeAtom);
 	const { t, i18n } = useTranslation();
 	const [value] = useLocalStorage("defaultLanguage", "en", { raw: true });
+	const navigate = useNavigate();
 
 	return (
 		<div className="flex items-center space-x-2">
@@ -35,6 +37,7 @@ const TogglePresentationMode: FC = () => {
 						},
 					);
 					setPresentationMode(checked);
+					navigate("/");
 				}}
 			/>
 

@@ -22,6 +22,7 @@ import { deleteRecord, sendMailNotification } from "@/lib/odoo.ts";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
+import RequestInfoTooltip from "@/components/request-info-tooltip.tsx";
 
 export default function JSONRpc() {
 	const [searchInputValueVictim] = useAtom(searchInputValueVictimAtom);
@@ -117,7 +118,8 @@ export default function JSONRpc() {
 							modelName: "res.partner",
 						})}
 					</h4>
-					<p className="py-3">
+					<p className="flex items-center py-3">
+						<RequestInfoTooltip />
 						<strong className="text-sm">{t("REQUEST_LABEL")} : </strong>
 						<code className="bg-gray-100">
 							odooJSONRpcClient.call_kw("res.partner", "search_read", [[["name",
@@ -138,7 +140,8 @@ export default function JSONRpc() {
 							modelName: "croissantage",
 						})}
 					</h4>
-					<p className="py-3">
+					<p className="flex items-center py-3">
+						<RequestInfoTooltip />
 						<strong className="text-sm">{t("REQUEST_LABEL")} : </strong>
 						<code className="bg-gray-100">
 							{`odooJSONRpcClient.call_kw("croissantage", "fields_get", ["state"], { "attributes": ["selection"]})`}
@@ -154,7 +157,8 @@ export default function JSONRpc() {
 							modelName: "croissantage",
 						})}
 					</h4>
-					<p className="py-3">
+					<p className="flex items-center py-3">
+						<RequestInfoTooltip />
 						<strong className="text-sm">{t("REQUEST_LABEL")} : </strong>
 						<code className="bg-gray-100">
 							{`odooJSONRpcClient.call_kw("croissantage", "search_read", [[], ["id", "name", "partner_id", "partner_ids"]])`}
@@ -234,11 +238,13 @@ await odooRpcClient.call_kw("mail.compose.message", "action_send_mail", [
 							modelName: "croissantage",
 						})}
 					</h4>
-					<pre className="bg-gray-100 p-4 rounded-md overflow-x-auto">
-						<code>
+					<p className="flex items-center py-3">
+						<RequestInfoTooltip />
+						<strong className="text-sm">{t("REQUEST_LABEL")} : </strong>
+						<code className="bg-gray-100">
 							{`odooRpcClient.call_kw("croissantage", "unlink", [recordId])`}
 						</code>
-					</pre>
+					</p>
 				</>
 			</DataCollapsible>
 		</>

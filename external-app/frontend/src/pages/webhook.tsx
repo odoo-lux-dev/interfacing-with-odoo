@@ -63,7 +63,9 @@ export default function Webhook() {
 
 			{receivedWebhooks.length ? (
 				<>
-					<h2 className="text-xl font-bold mb-2">Webhooks reçus</h2>
+					<h2 className="text-xl font-bold mb-2">
+						{t("WEBHOOK_RECEIVED_MESSAGE_LABEL", { ns: "pages" })}
+					</h2>
 					<WebhookList
 						webhooks={receivedWebhooks}
 						setSentWebhooks={(data: WebhookSentMessage) =>
@@ -76,7 +78,9 @@ export default function Webhook() {
 			{sentWebhooks.length ? (
 				<>
 					<Separator className="my-5" />
-					<h2 className="text-xl font-bold mb-2">Webhooks envoyés</h2>
+					<h2 className="text-xl font-bold mb-2">
+						{t("WEBHOOK_SENT_MESSAGE_LABEL", { ns: "pages" })}
+					</h2>
 					<WebhookList webhooks={sentWebhooks} />
 				</>
 			) : null}

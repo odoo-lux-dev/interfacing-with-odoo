@@ -11,5 +11,7 @@
 	"JSON_RPC_PAGE_CREATE_CROISSANTAGE": "Créer un croissantage",
 	"JSON_RPC_PAGE_VIEW_EDIT_CROISSANTAGES": "Lister et éditer des croissantages",
 	"WEBHOOK_PAGE_TITLE": "S'interfacer via Webhook",
-	"WEBHOOK_PAGE_WAITING_FOR_WEBHOOK": "En attente de réception de webhooks sur l'endpoint"
+	"WEBHOOK_PAGE_WAITING_FOR_WEBHOOK": "En attente de réception de webhooks sur l'endpoint",
+	"WEBHOOK_SENT_MESSAGE_LABEL": "Message envoyé via webhook",
+	"WEBHOOK_RECEIVED_MESSAGE_LABEL": "Message reçu via webhook"
 }

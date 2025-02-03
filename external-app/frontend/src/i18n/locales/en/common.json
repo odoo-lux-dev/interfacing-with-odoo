@@ -33,5 +33,6 @@
 	"MODEL_FETCHING_LABEL": "\"{{displayName}}\" fetching ({{modelName}})",
 	"MODEL_CREATION_LABEL": "\"{{displayName}}\" creation ({{modelName}})",
 	"MODEL_DELETION_LABEL": "\"{{displayName}}\" deletion ({{modelName}})",
-	"MODEL_SEND_NOTIFICATION_LABEL": "Send notification mail ({{modelName}})"
+	"MODEL_SEND_NOTIFICATION_LABEL": "Send notification mail ({{modelName}})",
+	"CALL_KW_INFO": "call_kw is a wrapper of execute_kw that allows to call a method on a model with a simplified syntax. It's implemented by the '@fernandoslim/odoo-jsonrpc' JS library and prevents from having to write the db, uid and password."
 }
