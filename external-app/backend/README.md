@@ -41,3 +41,49 @@ Il dispose de 2 routes:
    ```bash
    http://localhost:3000
    ```
+
+---
+
+# Interfacing with Odoo - External Application - Backend
+
+> [!WARNING]
+> This is a minimalist version of an application and is not intended to be used in production as is.
+
+## Introduction
+This repository contains the source code for the backend of the application demonstrating different possibilities for interfacing with Odoo.
+
+It has 2 routes:
+- A **webhook** route to receive data from Odoo
+- A **websocket** route to show real-time notification on the frontend
+
+## Technical Details
+- [Elysia](https://elysiajs.com/)
+- [Bun](https://bun.sh) as the package manager and runtime
+- [Biome](https://biomejs.dev/) as the formatter & linter to replace ESLint
+
+---
+
+## Starting the project locally
+
+### Prerequisites
+- [Bun](https://bun.sh)
+
+### Steps
+
+1. Clone the repository:
+   ```bash
+   git clone git@github.com:odoo-lux-dev/lux-tech-evening-odoo-interfacing.git
+   cd external-app/backend
+   ```
+2. Install dependencies:
+   ```bash
+   bun install
+   ```
+3. Start the server:
+   ```bash
+   bun run dev
+   ```
+4. The application is accessible at:
+   ```bash
+   http://localhost:3000
+   ```

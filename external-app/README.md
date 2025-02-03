@@ -12,3 +12,20 @@ Un README contenant plus de détails est inclus dans chaque dossier.
 
 > [!NOTE]
 > Les étapes pour récupérer localement les différentes applications sont disponibles dans leurs README respectifs.
+
+---
+
+# Interfacing with Odoo - External Application
+
+> [!WARNING]
+> This is a minimalist version of an application and is not intended to be used in production as is.
+
+This project is a web application for interfacing with Odoo. It is developed in TypeScript with React as the frontend library and Elysia as the backend framework.
+The repo is split into two folders:
+- `frontend` containing the frontend source code
+- `backend` containing the backend source code
+
+A README with more details is included in each folder.
+
+> [!NOTE]
+> The steps to fetch the different applications locally are available in their respective README files.

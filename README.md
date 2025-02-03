@@ -9,3 +9,17 @@ Le repo est séparé en deux dossiers:
 
 > [!TIP]
 > Vous pouvez trouver plus d'explications dans les README de chaque partie.
+
+---
+
+# Interfacing with Odoo
+
+> [!WARNING]
+> This is a minimalist version of an application and is not intended to be used in production as-is.
+
+The repository is divided into two folders:
+- `external-app` containing the source code of the external application
+- `odoo` containing the source code of the Odoo customizations
+
+> [!TIP]
+> You can find more explanations in the README files of each part.
