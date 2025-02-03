@@ -14,11 +14,12 @@ import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { editRecord } from "@/lib/odoo.ts";
+import { editCroissantage } from "@/lib/odoo.ts";
 import { toast } from "sonner";
 import { croissantageRpcListAtom } from "@/store/form-store.ts";
 import { useAtom } from "jotai";
 import { useTranslation } from "react-i18next";
+import { presentationModeAtom } from "@/store/options-store.ts";
 
 interface CroissantageModalEditProps {
 	children: ReactNode;
@@ -34,9 +35,10 @@ const CroissantageModalEdit: FC<CroissantageModalEditProps> = ({
 		croissantageRpcListAtom,
 	);
 	const { t } = useTranslation();
+	const [presentationMode] = useAtom(presentationModeAtom);
 
 	const croissantageEditMutation = useMutation({
-		mutationFn: editRecord,
+		mutationFn: editCroissantage,
 		onSuccess: () => {
 			toast.success(
 				t("CROISSANTAGE_SUCCESSFULLY_UPDATED", { ns: "croissantage" }),
@@ -75,26 +77,30 @@ const CroissantageModalEdit: FC<CroissantageModalEditProps> = ({
 				<DialogFooter>
 					<Button onClick={handleEditCroissantage}>{t("SAVE_LABEL")}</Button>
 				</DialogFooter>
-				<Separator className="my-5" />
-				<DataCollapsible title={t("RPC_CALL_DETAILS_LABEL")}>
-					<pre className="bg-gray-100 p-4 rounded-md overflow-x-auto">
-						<code>
-							{`const croissantageValues = ${JSON.stringify(
-								{
-									name: croissantageName,
-								},
-								null,
-								2,
-							)}
+				{!presentationMode ? (
+					<>
+						<Separator className="my-5" />
+						<DataCollapsible title={t("RPC_CALL_DETAILS_LABEL")}>
+							<pre className="bg-gray-100 p-4 rounded-md overflow-x-auto">
+								<code>
+									{`const croissantageValues = ${JSON.stringify(
+										{
+											name: croissantageName,
+										},
+										null,
+										2,
+									)}
 
 odooJSONRpcClient.call_kw("croissantage", "write", [
 	[${croissantage.id}], // ID Record
 	croissantageValues,
 ])
 `}
-						</code>
-					</pre>
-				</DataCollapsible>
+								</code>
+							</pre>
+						</DataCollapsible>
+					</>
+				) : null}
 			</DialogContent>
 		</Dialog>
 	);

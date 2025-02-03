@@ -18,6 +18,8 @@ import { Textarea } from "@/components/ui/textarea.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import DataCollapsible from "@/components/data-viewer-collapsible.tsx";
 import { useTranslation } from "react-i18next";
+import { useAtom } from "jotai/index";
+import { presentationModeAtom } from "@/store/options-store.ts";
 
 interface CroissantageModalLogNoteProps {
 	children: ReactNode;
@@ -30,6 +32,7 @@ const CroissantageModalLogNote: FC<CroissantageModalLogNoteProps> = ({
 }) => {
 	const [logNoteMessage, setLogNoteMessage] = useState("");
 	const { t } = useTranslation();
+	const [presentationMode] = useAtom(presentationModeAtom);
 
 	const croissantageLogNoteMutation = useMutation({
 		mutationFn: postLogNote,
@@ -75,27 +78,31 @@ const CroissantageModalLogNote: FC<CroissantageModalLogNoteProps> = ({
 				<DialogFooter>
 					<Button onClick={handleLogNoteCroissantage}>{t("SEND_LABEL")}</Button>
 				</DialogFooter>
-				<Separator className="my-5" />
-				<DataCollapsible title={t("RPC_CALL_DETAILS_LABEL")}>
-					<pre className="bg-gray-100 p-4 rounded-md overflow-x-auto">
-						<code>
-							{`const messageValues = ${JSON.stringify(
-								{
-									body: logNoteMessage,
-									message_type: "comment",
-								},
-								null,
-								2,
-							)}
+				{!presentationMode ? (
+					<>
+						<Separator className="my-5" />
+						<DataCollapsible title={t("RPC_CALL_DETAILS_LABEL")}>
+							<pre className="bg-gray-100 p-4 rounded-md overflow-x-auto">
+								<code>
+									{`const messageValues = ${JSON.stringify(
+										{
+											body: logNoteMessage,
+											message_type: "comment",
+										},
+										null,
+										2,
+									)}
 
 odooJSONRpcClient.call_kw("croissantage", "message_post", 
 	[[${croissantage.id}]], // ID Record
 	messageValues
 )
 `}
-						</code>
-					</pre>
-				</DataCollapsible>
+								</code>
+							</pre>
+						</DataCollapsible>
+					</>
+				) : null}
 			</DialogContent>
 		</Dialog>
 	);

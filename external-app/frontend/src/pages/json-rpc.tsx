@@ -18,7 +18,10 @@ import CroissantageModalEdit from "@/components/croissantage-modal-edit.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { NotebookPen, Pencil, Send, Trash2 } from "lucide-react";
 import CroissantageModalLogNote from "@/components/croissantage-modal-log-note.tsx";
-import { deleteRecord, sendMailNotification } from "@/lib/odoo.ts";
+import {
+	sendMailNotification,
+	deleteCroissantage as deleteCroissantageRecord,
+} from "@/lib/odoo.ts";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
@@ -44,7 +47,7 @@ export default function JSONRpc() {
 	});
 
 	const deleteCroissantageMutation = useMutation({
-		mutationFn: deleteRecord,
+		mutationFn: deleteCroissantageRecord,
 		onSuccess: () => {
 			toast.success(
 				t("CROISSANTAGE_SUCCESSFULLY_REMOVED", { ns: "croissantage" }),
@@ -74,7 +77,6 @@ export default function JSONRpc() {
 			<h2 className="text-xl font-bold mb-2">
 				{t("JSON_RPC_PAGE_VIEW_EDIT_CROISSANTAGES", { ns: "pages" })}
 			</h2>
-			<Separator className="my-5" />
 			<CroissantageList>
 				{croissantages?.map((croissantage: Croissantage) => (
 					<TableRow key={croissantage.id}>

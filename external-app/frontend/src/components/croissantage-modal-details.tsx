@@ -7,12 +7,14 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog.tsx";
 import { useQuery } from "@tanstack/react-query";
-import { odooFetch } from "@/lib/odoo.ts";
+import { fetchCroissantage } from "@/lib/odoo.ts";
 import { Separator } from "@/components/ui/separator.tsx";
 import DataCollapsible from "@/components/data-viewer-collapsible.tsx";
 import { store } from "@/store";
 import { odooConfigurationAtom } from "@/store/credentials-store.ts";
 import { useTranslation } from "react-i18next";
+import { useAtom } from "jotai/index";
+import { presentationModeAtom } from "@/store/options-store.ts";
 
 interface CroissantageModalDetailsProps {
 	children: ReactNode;
@@ -25,10 +27,11 @@ const CroissantageModalDetails: FC<CroissantageModalDetailsProps> = ({
 }) => {
 	const odooConfiguration = store.get(odooConfigurationAtom);
 	const { t } = useTranslation();
+	const [presentationMode] = useAtom(presentationModeAtom);
 
 	const { data } = useQuery({
 		queryKey: [`croissantage-details-${id}`],
-		queryFn: () => odooFetch(`/json/1/croissantage/${id}`),
+		queryFn: () => fetchCroissantage(id),
 	});
 
 	return (
@@ -70,18 +73,22 @@ const CroissantageModalDetails: FC<CroissantageModalDetailsProps> = ({
 						<strong>Croissanteur(s):</strong> {data?.partner_id.display_name}
 					</p>
 				</div>
-				<Separator className="my-5" />
-				<DataCollapsible title={t("API_RESPONSE_LABEL")}>
-					<p className="py-3">
-						<strong className="text-sm">{t("REQUEST_LABEL")} : </strong>
-						<code className="bg-gray-100">
-							{`${odooConfiguration.url}:${odooConfiguration.port}/json/1/croissantage/${id}`}
-						</code>
-					</p>
-					<pre className="bg-gray-100 p-4 rounded-md overflow-x-auto">
-						<code>{JSON.stringify(data, null, 2)}</code>
-					</pre>
-				</DataCollapsible>
+				{!presentationMode ? (
+					<>
+						<Separator className="my-5" />
+						<DataCollapsible title={t("API_RESPONSE_LABEL")}>
+							<p className="py-3">
+								<strong className="text-sm">{t("REQUEST_LABEL")} : </strong>
+								<code className="bg-gray-100">
+									{`${odooConfiguration.url}:${odooConfiguration.port}/json/1/croissantage/${id}`}
+								</code>
+							</p>
+							<pre className="bg-gray-100 p-4 rounded-md overflow-x-auto">
+								<code>{JSON.stringify(data, null, 2)}</code>
+							</pre>
+						</DataCollapsible>
+					</>
+				) : null}
 			</DialogContent>
 		</Dialog>
 	);

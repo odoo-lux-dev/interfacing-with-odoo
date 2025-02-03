@@ -12,6 +12,7 @@ import LanguageSwitcher from "@/components/language-switcher.tsx";
 const Header: FC = () => {
 	const { t } = useTranslation();
 	const [presentationMode] = useAtom(presentationModeAtom);
+
 	return (
 		<header className="flex items-center justify-between p-4 bg-gray-100">
 			<div className="flex space-x-4">
@@ -26,7 +27,18 @@ const Header: FC = () => {
 						<NavLinkButton endpoint="/json-rpc" label="JSON-RPC" />
 						<NavLinkButton endpoint="/webhook" label="Webhook" />
 					</>
-				) : null}
+				) : (
+					<>
+						<NavLinkButton
+							endpoint="/croissantages"
+							label="Liste des croissantages"
+						/>
+						<NavLinkButton
+							endpoint="/croissantages-admin"
+							label="Administration des croissantages"
+						/>
+					</>
+				)}
 			</div>
 			<div className="flex gap-3">
 				<OdooConfiguration>

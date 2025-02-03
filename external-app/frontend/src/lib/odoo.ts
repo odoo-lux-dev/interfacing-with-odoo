@@ -2,6 +2,13 @@ import OdooJSONRpc from "@fernandoslim/odoo-jsonrpc";
 import { odooConfigurationAtom } from "@/store/credentials-store";
 import { store } from "@/store";
 
+// ********************************************************************************************************************
+// *													Fetch part													  *
+// ********************************************************************************************************************
+
+// --------------------------------------------------------------------------------------------------------------------
+// 														  Utils
+// --------------------------------------------------------------------------------------------------------------------
 export async function odooFetch(url: string, options: RequestInit = {}) {
 	const odooConfiguration = store.get(odooConfigurationAtom);
 	const databaseEndpoint = `${odooConfiguration.url}:${odooConfiguration.port}`;
@@ -22,6 +29,24 @@ export async function odooFetch(url: string, options: RequestInit = {}) {
 	return response.json();
 }
 
+// --------------------------------------------------------------------------------------------------------------------
+// 														Functions
+// --------------------------------------------------------------------------------------------------------------------
+export function fetchCroissantages() {
+	return odooFetch("/json/1/croissantage");
+}
+
+export function fetchCroissantage(id: number) {
+	return odooFetch(`/json/1/croissantage/${id}`);
+}
+
+// ********************************************************************************************************************
+// *													JSON-RPC part												  *
+// ********************************************************************************************************************
+
+// --------------------------------------------------------------------------------------------------------------------
+// 														  Utils
+// --------------------------------------------------------------------------------------------------------------------
 export function getOdooJSONRpcClient(): Promise<OdooJSONRpc> {
 	return new Promise((resolve, reject) => {
 		const odooConfiguration = store.get(odooConfigurationAtom);
@@ -48,6 +73,9 @@ export function getOdooJSONRpcClient(): Promise<OdooJSONRpc> {
 	});
 }
 
+// --------------------------------------------------------------------------------------------------------------------
+// 														Functions
+// --------------------------------------------------------------------------------------------------------------------
 export async function sendMailNotification(recordId: number) {
 	const odooRpcClient = await getOdooJSONRpcClient();
 	// call_kw is a wrapper of Odoo's execute_kw
@@ -71,14 +99,14 @@ export async function sendMailNotification(recordId: number) {
 	]);
 }
 
-export async function deleteRecord(recordId: number) {
+export async function deleteCroissantage(recordId: number) {
 	const odooRpcClient = await getOdooJSONRpcClient();
 	// call_kw is a wrapper of Odoo's execute_kw
 	// It prevents to pass redundant parameters for each call : db, uid, password
 	return odooRpcClient.call_kw("croissantage", "unlink", [recordId]);
 }
 
-export async function createRecord(recordValues: {
+export async function createCroissantage(recordValues: {
 	name: string;
 	partner_id: number;
 	state: string;
@@ -89,7 +117,7 @@ export async function createRecord(recordValues: {
 	return odooRpcClient.call_kw("croissantage", "create", [recordValues]);
 }
 
-export async function editRecord(recordValues: {
+export async function editCroissantage(recordValues: {
 	id: number;
 	options: any;
 }) {
@@ -115,4 +143,43 @@ export async function postLogNote(recordValues: {
 		[[recordValues.id]],
 		recordValues.options,
 	);
+}
+
+export async function searchPartners(name: string) {
+	const odooRpcClient = await getOdooJSONRpcClient();
+	// call_kw is a wrapper of Odoo's execute_kw
+	// It prevents to pass redundant parameters for each call : db, uid, password
+	return odooRpcClient.call_kw("res.partner", "search_read", [
+		[
+			["name", "ilike", `%${name}%`],
+			["type", "=", "contact"],
+		],
+		["name", "id"],
+	]);
+}
+
+export async function getCroissantageStatuses() {
+	const odooRpcClient = await getOdooJSONRpcClient();
+	// call_kw is a wrapper of Odoo's execute_kw
+	// It prevents to pass redundant parameters for each call : db, uid, password
+	return odooRpcClient.call_kw("croissantage", "fields_get", ["state"], {
+		attributes: ["selection"],
+	});
+}
+
+export async function getCroissantages() {
+	const odooRpcClient = await getOdooJSONRpcClient();
+	// call_kw is a wrapper of Odoo's execute_kw
+	// It prevents to pass redundant parameters for each call : db, uid, password
+	const res = await odooRpcClient.call_kw("croissantage", "search_read", [
+		[],
+		["id", "name", "partner_id", "partner_ids"],
+	]);
+	return res.map((croissantage) => ({
+		...croissantage,
+		partner_id: {
+			id: croissantage.partner_id[0],
+			display_name: croissantage.partner_id[1],
+		},
+	}));
 }

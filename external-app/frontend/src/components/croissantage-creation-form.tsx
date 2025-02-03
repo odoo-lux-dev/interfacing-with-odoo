@@ -16,7 +16,7 @@ import {
 } from "@/store/form-store.ts";
 import { useAtom } from "jotai";
 import { useMutation } from "@tanstack/react-query";
-import { createRecord } from "@/lib/odoo.ts";
+import { createCroissantage } from "@/lib/odoo.ts";
 import { toast } from "sonner";
 import { store } from "@/store";
 import { odooConfigurationAtom } from "@/store/credentials-store.ts";
@@ -37,7 +37,7 @@ const CroissantageCreationForm: FC = () => {
 	}));
 
 	const croissantageCreationMutation = useMutation({
-		mutationFn: createRecord,
+		mutationFn: createCroissantage,
 		onSuccess: (recordId) => {
 			toast.success(t("CROISSANTAGE_SUCCESSFULLY_CREATED"), {
 				description: `ID: ${recordId}`,

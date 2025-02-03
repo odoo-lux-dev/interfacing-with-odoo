@@ -18,7 +18,7 @@ import { useState } from "react";
 import { useDebounce } from "react-use";
 import { atom, useAtom } from "jotai";
 import { useQuery } from "@tanstack/react-query";
-import { getOdooJSONRpcClient } from "@/lib/odoo.ts";
+import { searchPartners } from "@/lib/odoo.ts";
 import { useTranslation } from "react-i18next";
 
 interface PartnerSelectProps {
@@ -44,24 +44,11 @@ const PartnerSelect: FC<PartnerSelectProps> = ({
 	const { data: partners, isFetching: isFetchingPartners } = useQuery({
 		queryKey: ["partners", searchInputValue],
 		queryFn: async () => {
-			const odooRpcClient = await getOdooJSONRpcClient();
-			if (searchInputValue === "" || !odooRpcClient) {
+			if (searchInputValue === "") {
 				setFetchedPartners([]);
 				return [];
 			}
-			// call_kw is a wrapper of Odoo's execute_kw
-			// It prevents to pass redundant parameters for each call : db, uid, password
-			const partners = await odooRpcClient.call_kw(
-				"res.partner",
-				"search_read",
-				[
-					[
-						["name", "ilike", `%${searchInputValue}%`],
-						["type", "=", "contact"],
-					],
-					["name", "id"],
-				],
-			);
+			const partners = await searchPartners(searchInputValue);
 			setFetchedPartners(partners);
 			return partners;
 		},
