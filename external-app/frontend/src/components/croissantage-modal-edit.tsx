@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import DataCollapsible from "@/components/data-viewer-collapsible.tsx";
-import { Croissantage } from "@/types.ts";
+import type { Croissantage } from "@/types.ts";
 import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { useState } from "react";
@@ -48,12 +48,9 @@ const CroissantageModalEdit: FC<CroissantageModalEditProps> = ({
 	});
 
 	const handleEditCroissantage = async () => {
-		const croissantageValues = {
-			name: croissantageName,
-		};
 		croissantageEditMutation.mutate({
 			id: croissantage.id,
-			options: croissantageValues,
+			name: croissantageName,
 		});
 	};
 

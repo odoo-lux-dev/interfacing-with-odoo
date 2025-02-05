@@ -13,29 +13,20 @@ import { Input } from "@/components/ui/input.tsx";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
-import { WebhookReceivedMessage, WebhookSentMessage } from "@/types.ts";
+import type { WebhookReceivedMessage, WebhookSentMessage } from "@/types.ts";
 import { useTranslation } from "react-i18next";
+import { sendWebhookSimpleAction } from "@/lib/odoo.ts";
 
 interface WebhookModalSimpleActionProps {
 	webhook: WebhookReceivedMessage;
 	callback: (data: Partial<WebhookSentMessage>) => void;
 }
 
-const sendWebhook = async ({ recordId, webhookUrl }) => {
-	const webhookBody = {
-		_id: recordId,
-		_model: "croissantage",
-	};
-	const response = await fetch(webhookUrl, {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify(webhookBody),
-	});
-	if (!response.ok) {
-		throw new Error("Error w/ webhook");
-	}
-	return response.json();
-};
+const sendWebhook = async ({
+	recordId,
+	webhookUrl,
+}: { recordId: number; webhookUrl: string }) =>
+	sendWebhookSimpleAction(recordId, webhookUrl);
 
 const WebhookModalSimpleAction: FC<WebhookModalSimpleActionProps> = ({
 	webhook,
@@ -76,7 +67,10 @@ const WebhookModalSimpleAction: FC<WebhookModalSimpleActionProps> = ({
 			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>
-						{t("ACTION_TRIGGER_MODAL_TITLE", { name: webhook.name })}
+						{t("ACTION_TRIGGER_MODAL_TITLE", {
+							ns: "croissantage",
+							name: webhook.name,
+						})}
 					</DialogTitle>
 				</DialogHeader>
 				<DialogDescription>

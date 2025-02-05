@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import { store } from "@/store";
 import { odooConfigurationAtom } from "@/store/credentials-store.ts";
 import { useTranslation } from "react-i18next";
+import {presentationModeAtom} from "@/store/options-store.ts";
 
 const CroissantageCreationForm: FC = () => {
 	const odooConfiguration = store.get(odooConfigurationAtom);
@@ -30,6 +31,7 @@ const CroissantageCreationForm: FC = () => {
 	const [selectedExecutioners] = useAtom(selectedExecutionerAtom);
 	const [{ refetch: refetchCroissantages }] = useAtom(croissantageRpcListAtom);
 	const { t } = useTranslation();
+	const [presentationMode] = useAtom(presentationModeAtom);
 
 	const mappedStatuses = statuses.state.selection.map(([id, name]) => ({
 		id,
@@ -39,30 +41,33 @@ const CroissantageCreationForm: FC = () => {
 	const croissantageCreationMutation = useMutation({
 		mutationFn: createCroissantage,
 		onSuccess: (recordId) => {
-			toast.success(t("CROISSANTAGE_SUCCESSFULLY_CREATED"), {
-				description: `ID: ${recordId}`,
-				action: {
-					label: t("GO_TO_LABEL"),
-					onClick: () => {
-						window.open(
-							`${odooConfiguration.url}:${odooConfiguration.port}/odoo/croissantage/${recordId}`,
-							"_blank",
-						);
+			if (!presentationMode){
+				toast.success(
+					t("CROISSANTAGE_SUCCESSFULLY_CREATED", {ns: "croissantage"}),
+					{
+						description: `ID: ${recordId}`,
+						action: {
+							label: t("GO_TO_LABEL"),
+							onClick: () => {
+								window.open(
+									`${odooConfiguration.url}:${odooConfiguration.port}/odoo/croissantage/${recordId}`,
+									"_blank",
+								);
+							},
+						},
 					},
-				},
-			});
+				);
+			}
 			refetchCroissantages().catch(console.error);
 		},
 	});
 
 	const onSubmit = () => {
-		const croissantageValues = {
-			name: t("CROISSANTAGE_CREATED_VIA_RPC"),
+		croissantageCreationMutation.mutate({
 			partner_id: selectedVictim[0],
-			partner_ids: [[6, 0, selectedExecutioners]],
+			partner_ids: selectedExecutioners,
 			state: selectedStatus,
-		};
-		croissantageCreationMutation.mutate(croissantageValues);
+		});
 	};
 
 	return (

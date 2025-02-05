@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button.tsx";
 import WebhookModalSimpleAction from "@/components/webhook-modal-simple-action.tsx";
 import WebhookModalComplexAction from "@/components/webhook-modal-complex-action.tsx";
-import { WebhookReceivedMessage, WebhookSentMessage } from "@/types.ts";
+import type { WebhookReceivedMessage, WebhookSentMessage } from "@/types.ts";
 import { Hammer } from "lucide-react";
 import { useTranslation } from "react-i18next";
 

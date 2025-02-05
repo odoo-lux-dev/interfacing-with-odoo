@@ -8,7 +8,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog.tsx";
-import { Croissantage } from "@/types.ts";
+import type { Croissantage } from "@/types.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
@@ -42,13 +42,9 @@ const CroissantageModalLogNote: FC<CroissantageModalLogNoteProps> = ({
 	});
 
 	const handleLogNoteCroissantage = async () => {
-		const croissantageValues = {
-			body: logNoteMessage,
-			message_type: "comment",
-		};
 		croissantageLogNoteMutation.mutate({
 			id: croissantage.id,
-			options: croissantageValues,
+			body: logNoteMessage,
 		});
 	};
 

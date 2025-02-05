@@ -2,7 +2,7 @@ import { Separator } from "@/components/ui/separator.tsx";
 import CroissantageCreationForm from "@/components/croissantage-creation-form.tsx";
 import { croissantageRpcListAtom } from "@/store/form-store.ts";
 import { useAtom } from "jotai";
-import { Croissantage } from "@/types.ts";
+import type { Croissantage } from "@/types.ts";
 import { TableCell, TableRow } from "@/components/ui/table.tsx";
 import CroissantageList from "@/components/croissantage-list.tsx";
 import CroissantageModalEdit from "@/components/croissantage-modal-edit.tsx";

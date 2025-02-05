@@ -14,32 +14,23 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { useMutation } from "@tanstack/react-query";
-import { WebhookReceivedMessage, WebhookSentMessage } from "@/types.ts";
+import type { WebhookReceivedMessage, WebhookSentMessage } from "@/types.ts";
 import { store } from "@/store";
 import { odooConfigurationAtom } from "@/store/credentials-store.ts";
 import { useTranslation } from "react-i18next";
+import { sendWebhookLogNote } from "@/lib/odoo.ts";
 
 interface WebhookModalComplexActionProps {
 	webhook: WebhookReceivedMessage;
 	callback: (data: Partial<WebhookSentMessage>) => void;
 }
 
-const sendWebhook = async ({ recordId, webhookMessage, webhookUrl }) => {
-	const webhookBody = {
-		_id: recordId,
-		_model: "croissantage",
-		message: webhookMessage,
-	};
-	const response = await fetch(webhookUrl, {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify(webhookBody),
-	});
-	if (!response.ok) {
-		throw new Error("Error w/ webhook");
-	}
-	return response.json();
-};
+const sendWebhook = async ({
+	recordId,
+	webhookMessage,
+	webhookUrl,
+}: { recordId: number; webhookMessage: string; webhookUrl: string }) =>
+	sendWebhookLogNote(recordId, webhookMessage, webhookUrl);
 
 const WebhookModalComplexAction: FC<WebhookModalComplexActionProps> = ({
 	webhook,

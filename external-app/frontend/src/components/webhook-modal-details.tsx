@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { Search } from "lucide-react";
-import { WebhookReceivedMessage, WebhookSentMessage } from "@/types.ts";
+import type { WebhookReceivedMessage, WebhookSentMessage } from "@/types.ts";
 import { useTranslation } from "react-i18next";
 
 interface WebhookModalDetailsProps {

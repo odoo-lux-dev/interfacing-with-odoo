@@ -1,6 +1,6 @@
 import frenchFlag from "/flags/fr.svg";
 import englishFlag from "/flags/en.svg";
-import { FC } from "react";
+import type { FC } from "react";
 import { useTranslation } from "react-i18next";
 import {
 	DropdownMenu,
@@ -29,6 +29,7 @@ const LanguageSwitcher: FC = () => {
 				<Button variant="outline" className="flex items-center gap-2">
 					<img
 						src={flags[i18n.language as "en" | "fr"]}
+						alt="Current language"
 						width={24}
 						height={24}
 						className="rounded-full"
@@ -46,7 +47,7 @@ const LanguageSwitcher: FC = () => {
 					>
 						<div className="flex items-center gap-2">
 							<img
-								src={flags["en"]}
+								src={flags.en}
 								alt="EN Flag"
 								width={24}
 								height={24}
@@ -61,7 +62,7 @@ const LanguageSwitcher: FC = () => {
 					>
 						<div className="flex items-center gap-2">
 							<img
-								src={flags["fr"]}
+								src={flags.fr}
 								alt="FR Flag"
 								width={24}
 								height={24}

@@ -5,7 +5,7 @@ import { Provider } from "jotai";
 import { store } from "@/store";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import useWebSocket from "react-use-websocket";
-import { WebhookReceivedMessage } from "@/types.ts";
+import type { WebhookReceivedMessage } from "@/types.ts";
 import { toast } from "sonner";
 import { odooConfigurationAtom } from "@/store/credentials-store.ts";
 import { useAtom } from "jotai/index";

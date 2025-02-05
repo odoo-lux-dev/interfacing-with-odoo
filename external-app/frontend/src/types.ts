@@ -24,3 +24,8 @@ export interface WebhookReceivedMessage extends WebhookMessageBase {
 export interface WebhookSentMessage extends WebhookMessageBase {
 	type: "sent";
 }
+
+export type WebhookBodyOdoo<T extends object = {}> = {
+	_id: number;
+	_model: string;
+} & T;

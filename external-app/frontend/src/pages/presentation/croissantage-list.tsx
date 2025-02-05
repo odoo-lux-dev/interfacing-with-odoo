@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button.tsx";
 import { RefreshCcw, Search } from "lucide-react";
 import { TableCell, TableRow } from "@/components/ui/table.tsx";
 import CroissantageModalDetails from "@/components/croissantage-modal-details.tsx";
-import { Croissantage } from "@/types.ts";
+import type { Croissantage } from "@/types.ts";
 import { fetchCroissantages } from "@/lib/odoo.ts";
 
 export default function CroissantageListPage() {

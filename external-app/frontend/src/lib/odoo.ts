@@ -1,6 +1,8 @@
+import i18n from "@/i18n";
 import OdooJSONRpc from "@fernandoslim/odoo-jsonrpc";
 import { odooConfigurationAtom } from "@/store/credentials-store";
 import { store } from "@/store";
+import { WebhookBodyOdoo } from "@/types.ts";
 
 // ********************************************************************************************************************
 // *													Fetch part													  *
@@ -107,33 +109,46 @@ export async function deleteCroissantage(recordId: number) {
 }
 
 export async function createCroissantage(recordValues: {
-	name: string;
 	partner_id: number;
+	partner_ids: number[];
 	state: string;
 }) {
+	const croissantageValues = {
+		name: i18n.t("CROISSANTAGE_CREATED_VIA_RPC", { ns: "croissantage" }),
+		partner_id: recordValues.partner_id,
+		partner_ids: [[6, 0, recordValues.partner_ids]],
+		state: recordValues.state,
+	};
 	const odooRpcClient = await getOdooJSONRpcClient();
 	// call_kw is a wrapper of Odoo's execute_kw
 	// It prevents to pass redundant parameters for each call : db, uid, password
-	return odooRpcClient.call_kw("croissantage", "create", [recordValues]);
+	return odooRpcClient.call_kw("croissantage", "create", [croissantageValues]);
 }
 
 export async function editCroissantage(recordValues: {
 	id: number;
-	options: any;
+	name: string;
 }) {
+	const croissantageValues = {
+		name: recordValues.name,
+	};
 	const odooRpcClient = await getOdooJSONRpcClient();
 	// call_kw is a wrapper of Odoo's execute_kw
 	// It prevents to pass redundant parameters for each call : db, uid, password
 	return odooRpcClient.call_kw("croissantage", "write", [
 		[recordValues.id],
-		recordValues.options,
+		croissantageValues,
 	]);
 }
 
 export async function postLogNote(recordValues: {
 	id: number;
-	options: any;
+	body: string;
 }) {
+	const croissantageValues = {
+		body: recordValues.body,
+		message_type: "comment",
+	};
 	const odooRpcClient = await getOdooJSONRpcClient();
 	// call_kw is a wrapper of Odoo's execute_kw
 	// It prevents to pass redundant parameters for each call : db, uid, password
@@ -141,7 +156,7 @@ export async function postLogNote(recordValues: {
 		"croissantage",
 		"message_post",
 		[[recordValues.id]],
-		recordValues.options,
+		croissantageValues,
 	);
 }
 
@@ -182,4 +197,53 @@ export async function getCroissantages() {
 			display_name: croissantage.partner_id[1],
 		},
 	}));
+}
+
+// ********************************************************************************************************************
+// *												Webhook part													  *
+// ********************************************************************************************************************
+
+// --------------------------------------------------------------------------------------------------------------------
+// 														  Utils
+// --------------------------------------------------------------------------------------------------------------------
+export async function sendWebhook(
+	webhookUrl: string,
+	webhookBody: WebhookBodyOdoo,
+) {
+	const response = await fetch(webhookUrl, {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify(webhookBody),
+	});
+	if (!response.ok) {
+		throw new Error("Error w/ webhook");
+	}
+	return response.json();
+}
+
+// --------------------------------------------------------------------------------------------------------------------
+// 														Functions
+// --------------------------------------------------------------------------------------------------------------------
+export async function sendWebhookLogNote(
+	recordId: number,
+	webhookMessage: string,
+	webhookUrl: string,
+) {
+	const webhookBody: WebhookBodyOdoo<{ message: string }> = {
+		_id: recordId,
+		_model: "croissantage",
+		message: webhookMessage,
+	};
+	return sendWebhook(webhookUrl, webhookBody);
+}
+
+export async function sendWebhookSimpleAction(
+	recordId: number,
+	webhookUrl: string,
+) {
+	const webhookBody: WebhookBodyOdoo = {
+		_id: recordId,
+		_model: "croissantage",
+	};
+	return sendWebhook(webhookUrl, webhookBody);
 }

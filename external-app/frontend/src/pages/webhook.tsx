@@ -6,7 +6,7 @@ import { odooConfigurationAtom } from "@/store/credentials-store.ts";
 import WebhookList from "@/components/webhook-list.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
 import { LoaderCircle } from "lucide-react";
-import { WebhookReceivedMessage, WebhookSentMessage } from "@/types.ts";
+import type { WebhookReceivedMessage, WebhookSentMessage } from "@/types.ts";
 import { useTranslation } from "react-i18next";
 
 export default function Webhook() {
