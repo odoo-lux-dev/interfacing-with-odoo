@@ -17,6 +17,7 @@ Template `react-ts` de [Vite](https://vitejs.dev/), en utilisant :
 - [Biome](https://biomejs.dev/) en tant que formatter & linter pour remplacer ESLint
 - [shadcn/ui](https://ui.shadcn.com/) pour les composants
 - [Jotai](https://jotai.org/) pour la gestion de l'état
+- [@fernandoslim/odoo-jsonrpc](https://www.npmjs.com/package/@fernandoslim/odoo-jsonrpc) comme wrapper pour l'API JSON-RPC
 
 ---
 
@@ -66,6 +67,7 @@ Template `react-ts` from [Vite](https://vitejs.dev/), using:
 - [Biome](https://biomejs.dev/) as the formatter & linter to replace ESLint
 - [shadcn/ui](https://ui.shadcn.com/) for components
 - [Jotai](https://jotai.org/) for state management
+- [@fernandoslim/odoo-jsonrpc](https://www.npmjs.com/package/@fernandoslim/odoo-jsonrpc) as a wrapper for the JSON-RPC API
 
 ---
 

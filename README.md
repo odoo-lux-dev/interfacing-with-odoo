@@ -10,6 +10,10 @@ Le repo est séparé en deux dossiers:
 > [!TIP]
 > Vous pouvez trouver plus d'explications dans les README de chaque partie.
 
+### Liens utiles
+- [Documentation API externe Odoo](https://www.odoo.com/documentation/18.0/developer/reference/external_api.html)
+- ["Magic numbers" Odoo](https://www.odoo.com/documentation/18.0/developer/reference/backend/orm.html#odoo.fields.Command)
+
 ---
 
 # Interfacing with Odoo
@@ -23,3 +27,7 @@ The repository is divided into two folders:
 
 > [!TIP]
 > You can find more explanations in the README files of each part.
+
+### Useful links
+- [Odoo External API documentation](https://www.odoo.com/documentation/18.0/developer/reference/external_api.html)
+- [Odoo "Magic numbers"](https://www.odoo.com/documentation/18.0/developer/reference/backend/orm.html#odoo.fields.Command)
