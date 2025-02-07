@@ -8,8 +8,6 @@ import JSONPage from "@/pages/json";
 import Webhook from "@/pages/webhook";
 import JSONRpc from "@/pages/json-rpc";
 import Layout from "@/components/layout";
-import CroissantageListPage from "@/pages/presentation/croissantage-list.tsx";
-import CroissantageAdministration from "@/pages/presentation/croissantage-administration.tsx";
 
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
@@ -44,22 +42,6 @@ createRoot(document.getElementById("root")!).render(
 					element={
 						<Layout>
 							<Webhook />
-						</Layout>
-					}
-				/>
-				<Route
-					path="croissantages"
-					element={
-						<Layout>
-							<CroissantageListPage />
-						</Layout>
-					}
-				/>
-				<Route
-					path="croissantages-admin"
-					element={
-						<Layout>
-							<CroissantageAdministration />
 						</Layout>
 					}
 				/>

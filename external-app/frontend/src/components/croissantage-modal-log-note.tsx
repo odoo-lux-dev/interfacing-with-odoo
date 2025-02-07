@@ -12,7 +12,7 @@ import type { Croissantage } from "@/types.ts";
 import { Button } from "@/components/ui/button.tsx";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { postLogNote } from "@/lib/odoo.ts";
+import { postLogNote, sendWebhookLogNote } from "@/lib/odoo.ts";
 import { toast } from "sonner";
 import { Textarea } from "@/components/ui/textarea.tsx";
 import { Separator } from "@/components/ui/separator.tsx";
@@ -20,6 +20,8 @@ import DataCollapsible from "@/components/data-viewer-collapsible.tsx";
 import { useTranslation } from "react-i18next";
 import { useAtom } from "jotai/index";
 import { presentationModeAtom } from "@/store/options-store.ts";
+import { store } from "@/store";
+import { odooConfigurationAtom } from "@/store/credentials-store";
 
 interface CroissantageModalLogNoteProps {
 	children: ReactNode;
@@ -34,8 +36,17 @@ const CroissantageModalLogNote: FC<CroissantageModalLogNoteProps> = ({
 	const { t } = useTranslation();
 	const [presentationMode] = useAtom(presentationModeAtom);
 
+	const handleWebhookCase = async ({
+		id,
+		body,
+	}: { id: number; body: string }) => {
+		const odooConfiguration = store.get(odooConfigurationAtom);
+		const webhookUrl = `${odooConfiguration.url}:${odooConfiguration.port}/web/hook/add_log_note`;
+		sendWebhookLogNote(id, body, webhookUrl);
+	};
+
 	const croissantageLogNoteMutation = useMutation({
-		mutationFn: postLogNote,
+		mutationFn: presentationMode ? handleWebhookCase : postLogNote,
 		onSuccess: () => {
 			toast.success(t("LOG_NOTE_SUCCESSFULLY_SENT", { ns: "croissantage" }));
 		},

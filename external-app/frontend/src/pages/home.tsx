@@ -1,6 +1,7 @@
 import { useAtom } from "jotai/index";
 import { presentationModeAtom } from "@/store/options-store.ts";
 import { useTranslation } from "react-i18next";
+import PresentationHomepage from "@/pages/presentation/presentation-homepage";
 
 export default function Home() {
 	const [presentationMode] = useAtom(presentationModeAtom);
@@ -32,5 +33,5 @@ export default function Home() {
 		);
 	}
 
-	return null;
+	return <PresentationHomepage />;
 }

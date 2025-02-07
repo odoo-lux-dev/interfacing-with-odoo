@@ -67,10 +67,11 @@ const CroissantageModalDetails: FC<CroissantageModalDetailsProps> = ({
 						<strong>{t("DURATION_LABEL")}:</strong> {data?.duration}
 					</p>
 					<p>
-						<strong>Croissanté:</strong> {data?.partner_id.id}
+						<strong>Croissanté:</strong> {data?.partner_id?.display_name}
 					</p>
 					<p>
-						<strong>Croissanteur(s):</strong> {data?.partner_id.display_name}
+						<strong>Croissanteur(s):</strong>{" "}
+						{data?.partner_names?.join(", ") || data?.partner_ids?.join(", ")}
 					</p>
 				</div>
 				{!presentationMode ? (

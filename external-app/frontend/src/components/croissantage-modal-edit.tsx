@@ -13,7 +13,7 @@ import type { Croissantage } from "@/types.ts";
 import { Input } from "@/components/ui/input.tsx";
 import { Button } from "@/components/ui/button.tsx";
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { editCroissantage } from "@/lib/odoo.ts";
 import { toast } from "sonner";
 import { croissantageRpcListAtom } from "@/store/form-store.ts";
@@ -36,6 +36,7 @@ const CroissantageModalEdit: FC<CroissantageModalEditProps> = ({
 	);
 	const { t } = useTranslation();
 	const [presentationMode] = useAtom(presentationModeAtom);
+	const queryClient = useQueryClient();
 
 	const croissantageEditMutation = useMutation({
 		mutationFn: editCroissantage,
@@ -43,7 +44,13 @@ const CroissantageModalEdit: FC<CroissantageModalEditProps> = ({
 			toast.success(
 				t("CROISSANTAGE_SUCCESSFULLY_UPDATED", { ns: "croissantage" }),
 			);
-			refetchCroissantageList().catch(console.error);
+			if (presentationMode) {
+				queryClient.invalidateQueries({
+					queryKey: ["croissantageList"],
+				});
+			} else {
+				refetchCroissantageList().catch(console.error);
+			}
 		},
 	});
 

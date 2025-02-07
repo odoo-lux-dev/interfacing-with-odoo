@@ -8,6 +8,7 @@ export interface Croissantage {
 	name: string;
 	partner_id: Partner;
 	partner_ids: number[];
+	partner_names?: string[];
 }
 
 export interface WebhookMessageBase {

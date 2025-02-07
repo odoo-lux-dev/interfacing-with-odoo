@@ -27,18 +27,7 @@ const Header: FC = () => {
 						<NavLinkButton endpoint="/json-rpc" label="JSON-RPC" />
 						<NavLinkButton endpoint="/webhook" label="Webhook" />
 					</>
-				) : (
-					<>
-						<NavLinkButton
-							endpoint="/croissantages"
-							label="Liste des croissantages"
-						/>
-						<NavLinkButton
-							endpoint="/croissantages-admin"
-							label="Administration des croissantages"
-						/>
-					</>
-				)}
+				) : null}
 			</div>
 			<div className="flex gap-3">
 				<OdooConfiguration>

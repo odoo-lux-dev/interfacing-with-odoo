@@ -2,7 +2,7 @@ import i18n from "@/i18n";
 import OdooJSONRpc from "@fernandoslim/odoo-jsonrpc";
 import { odooConfigurationAtom } from "@/store/credentials-store";
 import { store } from "@/store";
-import { WebhookBodyOdoo } from "@/types.ts";
+import type { Croissantage, WebhookBodyOdoo } from "@/types.ts";
 
 // ********************************************************************************************************************
 // *													Fetch part													  *
@@ -34,12 +34,42 @@ export async function odooFetch(url: string, options: RequestInit = {}) {
 // --------------------------------------------------------------------------------------------------------------------
 // 														Functions
 // --------------------------------------------------------------------------------------------------------------------
-export function fetchCroissantages() {
-	return odooFetch("/json/1/croissantage");
+export async function fetchCroissantages() {
+	const res = await odooFetch("/json/1/croissantage");
+	let { records } = res;
+	records = await Promise.all(
+		records.map(async (croissantage: Croissantage) => {
+			const { partner_ids } = croissantage;
+			const partnerNames = await Promise.all(
+				partner_ids.map(async (partnerId) => {
+					const { name } = await odooFetch(`/json/1/res.partner/${partnerId}`);
+					return name;
+				}),
+			);
+			return {
+				...croissantage,
+				partner_names: partnerNames,
+			};
+		}),
+	);
+	return {
+		...res,
+		records,
+	};
 }
 
-export function fetchCroissantage(id: number) {
-	return odooFetch(`/json/1/croissantage/${id}`);
+export async function fetchCroissantage(id: number) {
+	const res = await odooFetch(`/json/1/croissantage/${id}`);
+	const partnerNames = await Promise.all(
+		res.partner_ids.map(async (partnerId: number) => {
+			const { name } = await odooFetch(`/json/1/res.partner/${partnerId}`);
+			return name;
+		}),
+	);
+	return {
+		...res,
+		partner_names: partnerNames,
+	};
 }
 
 // ********************************************************************************************************************
@@ -78,6 +108,22 @@ export function getOdooJSONRpcClient(): Promise<OdooJSONRpc> {
 // --------------------------------------------------------------------------------------------------------------------
 // 														Functions
 // --------------------------------------------------------------------------------------------------------------------
+export async function editCroissantage(recordValues: {
+	id: number;
+	name: string;
+}) {
+	const croissantageValues = {
+		name: recordValues.name,
+	};
+	const odooRpcClient = await getOdooJSONRpcClient();
+	// call_kw is a wrapper of Odoo's execute_kw
+	// It prevents to pass redundant parameters for each call : db, uid, password
+	return odooRpcClient.call_kw("croissantage", "write", [
+		[recordValues.id],
+		croissantageValues,
+	]);
+}
+
 export async function sendMailNotification(recordId: number) {
 	const odooRpcClient = await getOdooJSONRpcClient();
 	// call_kw is a wrapper of Odoo's execute_kw
@@ -108,6 +154,19 @@ export async function deleteCroissantage(recordId: number) {
 	return odooRpcClient.call_kw("croissantage", "unlink", [recordId]);
 }
 
+export async function searchPartners(name: string) {
+	const odooRpcClient = await getOdooJSONRpcClient();
+	// call_kw is a wrapper of Odoo's execute_kw
+	// It prevents to pass redundant parameters for each call : db, uid, password
+	return odooRpcClient.call_kw("res.partner", "search_read", [
+		[
+			["name", "ilike", `%${name}%`],
+			["type", "=", "contact"],
+		],
+		["name", "id"],
+	]);
+}
+
 export async function createCroissantage(recordValues: {
 	partner_id: number;
 	partner_ids: number[];
@@ -123,22 +182,6 @@ export async function createCroissantage(recordValues: {
 	// call_kw is a wrapper of Odoo's execute_kw
 	// It prevents to pass redundant parameters for each call : db, uid, password
 	return odooRpcClient.call_kw("croissantage", "create", [croissantageValues]);
-}
-
-export async function editCroissantage(recordValues: {
-	id: number;
-	name: string;
-}) {
-	const croissantageValues = {
-		name: recordValues.name,
-	};
-	const odooRpcClient = await getOdooJSONRpcClient();
-	// call_kw is a wrapper of Odoo's execute_kw
-	// It prevents to pass redundant parameters for each call : db, uid, password
-	return odooRpcClient.call_kw("croissantage", "write", [
-		[recordValues.id],
-		croissantageValues,
-	]);
 }
 
 export async function postLogNote(recordValues: {
@@ -158,19 +201,6 @@ export async function postLogNote(recordValues: {
 		[[recordValues.id]],
 		croissantageValues,
 	);
-}
-
-export async function searchPartners(name: string) {
-	const odooRpcClient = await getOdooJSONRpcClient();
-	// call_kw is a wrapper of Odoo's execute_kw
-	// It prevents to pass redundant parameters for each call : db, uid, password
-	return odooRpcClient.call_kw("res.partner", "search_read", [
-		[
-			["name", "ilike", `%${name}%`],
-			["type", "=", "contact"],
-		],
-		["name", "id"],
-	]);
 }
 
 export async function getCroissantageStatuses() {

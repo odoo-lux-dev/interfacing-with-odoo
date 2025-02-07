@@ -15,13 +15,13 @@ import {
 	selectedVictimAtom,
 } from "@/store/form-store.ts";
 import { useAtom } from "jotai";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createCroissantage } from "@/lib/odoo.ts";
 import { toast } from "sonner";
 import { store } from "@/store";
 import { odooConfigurationAtom } from "@/store/credentials-store.ts";
 import { useTranslation } from "react-i18next";
-import {presentationModeAtom} from "@/store/options-store.ts";
+import { presentationModeAtom } from "@/store/options-store.ts";
 
 const CroissantageCreationForm: FC = () => {
 	const odooConfiguration = store.get(odooConfigurationAtom);
@@ -32,6 +32,7 @@ const CroissantageCreationForm: FC = () => {
 	const [{ refetch: refetchCroissantages }] = useAtom(croissantageRpcListAtom);
 	const { t } = useTranslation();
 	const [presentationMode] = useAtom(presentationModeAtom);
+	const queryClient = useQueryClient();
 
 	const mappedStatuses = statuses.state.selection.map(([id, name]) => ({
 		id,
@@ -41,9 +42,9 @@ const CroissantageCreationForm: FC = () => {
 	const croissantageCreationMutation = useMutation({
 		mutationFn: createCroissantage,
 		onSuccess: (recordId) => {
-			if (!presentationMode){
+			if (!presentationMode) {
 				toast.success(
-					t("CROISSANTAGE_SUCCESSFULLY_CREATED", {ns: "croissantage"}),
+					t("CROISSANTAGE_SUCCESSFULLY_CREATED", { ns: "croissantage" }),
 					{
 						description: `ID: ${recordId}`,
 						action: {
@@ -58,7 +59,13 @@ const CroissantageCreationForm: FC = () => {
 					},
 				);
 			}
-			refetchCroissantages().catch(console.error);
+			if (presentationMode) {
+				queryClient.invalidateQueries({
+					queryKey: ["croissantageList"],
+				});
+			} else {
+				refetchCroissantages().catch(console.error);
+			}
 		},
 	});
 
@@ -93,20 +100,22 @@ const CroissantageCreationForm: FC = () => {
 					partnersAtom={partnersExecutionerListAtom}
 				/>
 			</div>
-			<div className="flex items-center gap-3">
-				<Label>{t("STATE_LABEL")}</Label>
-				<RadioGroup
-					onValueChange={setSelectedStatus}
-					className="flex space-x-4"
-				>
-					{mappedStatuses.map((s) => (
-						<div key={s.id} className="flex items-center space-x-2">
-							<RadioGroupItem value={s.id} id={s.id} />
-							<Label htmlFor={s.id}>{s.name}</Label>
-						</div>
-					))}
-				</RadioGroup>
-			</div>
+			{!presentationMode ? (
+				<div className="flex items-center gap-3">
+					<Label>{t("STATE_LABEL")}</Label>
+					<RadioGroup
+						onValueChange={setSelectedStatus}
+						className="flex space-x-4"
+					>
+						{mappedStatuses.map((s) => (
+							<div key={s.id} className="flex items-center space-x-2">
+								<RadioGroupItem value={s.id} id={s.id} />
+								<Label htmlFor={s.id}>{s.name}</Label>
+							</div>
+						))}
+					</RadioGroup>
+				</div>
+			) : null}
 
 			<Button onClick={onSubmit}>{t("CREATE_LABEL")}</Button>
 		</div>

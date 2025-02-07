@@ -16,7 +16,7 @@ import {
 import { cn } from "@/lib/utils.ts";
 import { useState } from "react";
 import { useDebounce } from "react-use";
-import { atom, useAtom } from "jotai";
+import { type atom, useAtom } from "jotai";
 import { useQuery } from "@tanstack/react-query";
 import { searchPartners } from "@/lib/odoo.ts";
 import { useTranslation } from "react-i18next";
