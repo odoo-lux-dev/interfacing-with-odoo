@@ -20,7 +20,7 @@
                     </group>
                     <group>
                         <group>
-                            <field name="partner_ids" widget="many2many_tags" string="Croissanteur" />
+                            <field name="partner_ids" widget="many2many_tags" string="Croissanteur(s)" />
                             <field name="date_begin"/>
                             <field name="duration" />
                             <field name="city"/>
@@ -42,8 +42,8 @@
         <field name="arch" type="xml">
             <list>
                 <field name="name" />
-                <field name="partner_id" />
-                <field name="partner_ids" widget="many2many_tags" />
+                <field name="partner_id" string="Croissanté"/>
+                <field name="partner_ids" widget="many2many_tags" string="Croissanteur(s)"/>
             </list>
         </field>
     </record>
